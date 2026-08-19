@@ -26,7 +26,7 @@ def add_documnets(chunks, embeddings):
 
         embeddings=embeddings.tolist(),
 
-        metadata = metadatas
+        metadatas = metadatas,
     )
 
     print(f"Added {len(chunks)} chunks to ChromaDB")
