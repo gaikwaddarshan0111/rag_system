@@ -11,4 +11,6 @@ def retrieve_documents(query, top_k=3):
         n_results=top_k
     )
 
-    return results
+    print("\nDEBUG - chroma result type:", type(results))
+    print("DEBUG - chroma result keys:", results.keys())
+    return results["documents"][0]
