@@ -958,3 +958,34 @@ button {
 
     font-size: 9px;
 }
+
+.build-button {
+    display: block;
+
+    width: 220px;
+
+    margin: 18px auto 0;
+
+    padding: 10px 18px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    background: var(--blue);
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.build-button:hover {
+    background: var(--blue-light);
+}
+
+.build-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

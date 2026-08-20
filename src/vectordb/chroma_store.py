@@ -1,4 +1,5 @@
 import chromadb
+import uuid
 
 client = chromadb.PersistentClient(
     path="./vector_db"
@@ -10,14 +11,26 @@ collection = client.get_or_create_collection(
 )
 
 
-def add_documnets(chunks, embeddings):
-    ids = [f"chunk={i}" for i in range(len(chunks))]
+def add_documnets(chunks, embeddings, source):
+    """
+    Add document chunks and embeddings to ChromaDB.
+    """
 
-    metadatas=[
-        {"source": "company_policy.txt"}
-
+    ids = [
+        str(uuid.uuid4())
         for _ in chunks
     ]
+
+    metadatas=[
+        {
+            "source": source,
+            "chunk_index": i
+        }
+
+        for i in range(len(chunks))
+
+    ]
+
 
     collection.add(
         ids=ids,
@@ -30,3 +43,5 @@ def add_documnets(chunks, embeddings):
     )
 
     print(f"Added {len(chunks)} chunks to ChromaDB")
+
+    return len(chunks)

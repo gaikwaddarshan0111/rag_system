@@ -2,6 +2,10 @@ from src.ingestion.loader import load_pdf
 from src.chunking.chunker import chunk_text
 
 def process_pdf(file_path: str):
+    """
+    Load a PDF and split its text into chunks.
+    """
+    
     text = load_pdf(file_path)
 
     chunks = chunk_text(

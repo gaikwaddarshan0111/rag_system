@@ -19,7 +19,7 @@
 
         <div class="brand">
             <div class="brand-icon">✦</div>
-            <span>RAG System</span>
+            <span>RAG System </span>
         </div>
 
         <div class="profile">
@@ -140,6 +140,7 @@
                 data-mode="ask">
                 Ask
             </button>
+            
 
         </div>
 
@@ -163,13 +164,13 @@
                 </p>
 
                 <span>
-                    PDF, TXT or DOCX (max. 10MB)
+                    PDF (max. 10MB)
                 </span>
 
                 <input
                     type="file"
                     id="fileInput"
-                    accept=".pdf,.txt,.docx"
+                    accept=".pdf"
                     multiple
                     hidden
                 >
@@ -178,6 +179,12 @@
                     id="chooseFileButton"
                     class="upload-button">
                     Choose Files
+                </button>
+
+                <button
+                    id ="trainButton"
+                    class="build-button">
+                    Build Knowledge Base
                 </button>
 
             </div>
