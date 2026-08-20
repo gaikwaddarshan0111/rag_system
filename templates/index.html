@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RAG System</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">✦</div>
+            <span>RAG System</span>
+        </div>
+
+        <div class="profile">
+            <div class="avatar">D</div>
+
+            <div class="profile-info">
+                <strong>Darshan</strong>
+                <span>Workspace</span>
+            </div>
+
+            <span class="chevron">⌄</span>
+        </div>
+
+
+        <div class="sidebar-section">
+
+            <div class="section-title">
+                WORKSPACE
+            </div>
+
+            <button class="sidebar-item active">
+                <span>⌂</span>
+                Home
+            </button>
+
+            <button class="sidebar-item">
+                <span>♙</span>
+                Team
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-section">
+
+            <div class="section-title">
+                KNOWLEDGE
+            </div>
+
+            <button class="sidebar-item">
+                <span>▱</span>
+                Documents
+            </button>
+
+            <button class="sidebar-item">
+                <span>▦</span>
+                Collections
+            </button>
+
+        </div>
+
+
+        <div class="sidebar-section">
+
+            <div class="section-title">
+                TAGS
+            </div>
+
+            <div class="tag">
+                <span class="dot blue"></span>
+                Urgent
+            </div>
+
+            <div class="tag">
+                <span class="dot gray"></span>
+                Reviewed
+            </div>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <button class="sidebar-item">
+                <span>⚙</span>
+                Settings
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <div class="topbar">
+
+            <div>
+                <h1>Knowledge Base</h1>
+
+                <p>
+                    Upload documents and build your RAG knowledge base.
+                </p>
+            </div>
+
+            <button
+                class="add-button"
+                id="addDocumentButton">
+                + Add New
+            </button>
+
+        </div>
+
+
+        <!-- TRAIN / ASK TABS -->
+
+        <div class="mode-tabs">
+
+            <button
+                class="mode-tab active"
+                data-mode="train">
+                Train
+            </button>
+
+            <button
+                class="mode-tab"
+                data-mode="ask">
+                Ask
+            </button>
+
+        </div>
+
+
+        <!-- TRAIN -->
+
+        <section
+            id="trainMode"
+            class="mode-content active">
+
+            <div class="upload-card">
+
+                <div class="upload-icon">
+                    ↑
+                </div>
+
+                <h2>Upload Knowledge</h2>
+
+                <p>
+                    Click to upload or drag and drop
+                </p>
+
+                <span>
+                    PDF, TXT or DOCX (max. 10MB)
+                </span>
+
+                <input
+                    type="file"
+                    id="fileInput"
+                    accept=".pdf,.txt,.docx"
+                    multiple
+                    hidden
+                >
+
+                <button
+                    id="chooseFileButton"
+                    class="upload-button">
+                    Choose Files
+                </button>
+
+            </div>
+
+
+            <div class="documents-header">
+
+                <div>
+                    <span class="breadcrumb">Home</span>
+                    <span class="separator">›</span>
+                    <strong>Knowledge Base</strong>
+                </div>
+
+                <span id="documentCount">
+                    0 documents
+                </span>
+
+            </div>
+
+
+            <div
+                id="documentList"
+                class="document-list">
+
+                <div class="empty-state">
+
+                    <div>📄</div>
+
+                    <p>
+                        No documents indexed yet.
+                    </p>
+
+                    <span>
+                        Upload a document to get started.
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ASK -->
+
+        <section
+            id="askMode"
+            class="mode-content">
+
+            <div class="ask-page">
+
+                <div class="ask-header">
+
+                    <div class="ask-icon">
+                        ✦
+                    </div>
+
+                    <h2>
+                        Ask your knowledge base
+                    </h2>
+
+                    <p>
+                        Ask questions about your uploaded documents.
+                    </p>
+
+                </div>
+
+
+                <div class="question-container">
+
+                    <textarea
+                        id="questionInput"
+                        placeholder="Ask a question about your documents..."></textarea>
+
+                    <button
+                        id="askButton"
+                        class="send-button">
+                        ↑
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="answerContainer"
+                    class="answer-container hidden">
+
+                    <div class="answer-label">
+                        AI Assistant
+                    </div>
+
+                    <div id="answer"></div>
+
+                    <div
+                        id="sources"
+                        class="sources">
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- AI ASSISTANT -->
+
+    <aside class="assistant">
+
+        <div class="assistant-header">
+
+            <div class="assistant-title">
+
+                <div class="assistant-avatar">
+                    ✦
+                </div>
+
+                <div>
+                    <strong>AI Assistant</strong>
+
+                    <div class="status">
+                        <span></span>
+                        RAG Active
+                    </div>
+                </div>
+
+            </div>
+
+            <button class="icon-button">
+                +
+            </button>
+
+        </div>
+
+
+        <div
+            id="chatMessages"
+            class="chat-messages">
+
+            <div class="message assistant-message">
+
+                <div class="message-avatar">
+                    ✦
+                </div>
+
+                <div>
+
+                    <div class="message-bubble">
+
+                        Hello! I'm ready to answer questions
+                        about your knowledge base.
+
+                    </div>
+
+                    <span class="message-time">
+                        Just now
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="chat-input-container">
+
+            <textarea
+                id="chatInput"
+                placeholder="Ask a question about your documents..."></textarea>
+
+            <button
+                id="chatSendButton"
+                class="send-button">
+                ↑
+            </button>
+
+        </div>
+
+
+        <div class="disclaimer">
+
+            AI can make mistakes. Verify important information.
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+<script src="/static/js/app.js"></script>
+
+</body>
+
+</html>
