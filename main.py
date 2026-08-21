@@ -4,6 +4,7 @@ from fastapi import FastAPI , Request , UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from src.vectordb.index_documents import index_document
+from src.api.routes import router
 
 app = FastAPI(
     title="RAG SYSTEM",
@@ -130,5 +131,5 @@ async def train_document(
             "message" : str(error)
         }
 
-
+app.include_router(router)
     

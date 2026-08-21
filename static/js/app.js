@@ -1,19 +1,9 @@
-// =================================
-// DOM ELEMENTS
-// =================================
+const modeTabs = document.querySelectorAll(".mode-tab");
 
-const modeTabs =
-    document.querySelectorAll(".mode-tab");
+const trainMode = document.getElementById("trainMode");
+const askMode = document.getElementById("askMode");
 
-const trainMode =
-    document.getElementById("trainMode");
-
-const askMode =
-    document.getElementById("askMode");
-
-const fileInput =
-    document.getElementById("fileInput");
-
+const fileInput = document.getElementById("fileInput");
 const chooseFileButton =
     document.getElementById("chooseFileButton");
 
@@ -29,15 +19,29 @@ const documentCount =
 const trainButton =
     document.getElementById("trainButton");
 
-const chatInput =
-    document.getElementById("chatInput");
 
-const chatSendButton =
-    document.getElementById("chatSendButton");
+// =================================
+// ASK ELEMENTS
+// =================================
+
+const questionInput =
+    document.getElementById("questionInput");
+
+const askButton =
+    document.getElementById("askButton");
+
+const answerContainer =
+    document.getElementById("answerContainer");
+
+const answerElement =
+    document.getElementById("answer");
+
+const sourcesElement =
+    document.getElementById("sources");
 
 
 // =================================
-// TRAIN / ASK
+// TRAIN / ASK TABS
 // =================================
 
 modeTabs.forEach(tab => {
@@ -50,8 +54,7 @@ modeTabs.forEach(tab => {
 
         tab.classList.add("active");
 
-        const mode =
-            tab.dataset.mode;
+        const mode = tab.dataset.mode;
 
         if (mode === "train") {
 
@@ -75,9 +78,7 @@ modeTabs.forEach(tab => {
 // =================================
 
 function openFilePicker() {
-
     fileInput.click();
-
 }
 
 
@@ -94,7 +95,7 @@ addDocumentButton.addEventListener(
 
 
 // =================================
-// FILE SELECTION
+// FILE SELECTION UI
 // =================================
 
 fileInput.addEventListener(
@@ -104,79 +105,46 @@ fileInput.addEventListener(
         const files =
             Array.from(fileInput.files);
 
-
         if (files.length === 0) {
             return;
         }
 
-
-        // Clear empty state
         documentList.innerHTML = "";
 
+        files.forEach(file => {
 
-        // Display selected files
-        files.forEach(
-            (file, index) => {
+            const item =
+                document.createElement("div");
 
-                const item =
-                    document.createElement("div");
+            item.className =
+                "document-item";
 
+            item.innerHTML = `
+                <div class="document-icon">
+                    📄
+                </div>
 
-                item.className =
-                    "document-item";
+                <div class="document-info">
 
-
-                item.innerHTML = `
-
-                    <div class="document-icon">
-                        📄
+                    <div class="document-name">
+                        ${file.name}
                     </div>
 
-
-                    <div class="document-info">
-
-                        <div class="document-name">
-                            ${file.name}
-                        </div>
-
-
-                        <div class="document-meta">
-
-                            ${(file.size / 1024 / 1024).toFixed(2)} MB
-
-                        </div>
-
-
-                        <div class="progress-container">
-
-                            <div
-                                class="progress-bar"
-                                id="progress-${index}">
-                            </div>
-
-                        </div>
-
+                    <div class="document-meta">
+                        ${(file.size / 1024 / 1024).toFixed(2)} MB
                     </div>
 
+                </div>
 
-                    <span
-                        class="status-badge"
-                        id="status-${index}">
+                <span class="status-badge">
+                    Ready
+                </span>
+            `;
 
-                        Ready
+            documentList.appendChild(item);
 
-                    </span>
+        });
 
-                `;
-
-
-                documentList.appendChild(item);
-
-            }
-        );
-
-
-        // Update document count
         documentCount.innerText =
             `${files.length} document${files.length > 1 ? "s" : ""}`;
 
@@ -185,169 +153,44 @@ fileInput.addEventListener(
 
 
 // =================================
-// DOCUMENT UPLOAD
+// UPLOAD DOCUMENT
 // =================================
 
-function uploadDocument(
-    file,
-    progressBar,
-    statusBadge
-) {
+async function uploadDocument(file) {
 
-    return new Promise(
-        (resolve, reject) => {
+    const formData =
+        new FormData();
 
-            const xhr =
-                new XMLHttpRequest();
-
-
-            const formData =
-                new FormData();
-
-
-            formData.append(
-                "file",
-                file
-            );
-
-
-            xhr.open(
-                "POST",
-                "/train"
-            );
-
-
-            // =================================
-            // UPLOAD PROGRESS
-            // =================================
-
-            xhr.upload.addEventListener(
-                "progress",
-                event => {
-
-                    if (!event.lengthComputable) {
-                        return;
-                    }
-
-
-                    const percent =
-                        Math.round(
-                            (event.loaded /
-                                event.total) * 100
-                        );
-
-
-                    progressBar.style.width =
-                        `${percent}%`;
-
-
-                    statusBadge.innerText =
-                        `Uploading ${percent}%`;
-
-                }
-            );
-
-
-            // =================================
-            // SERVER RESPONSE
-            // =================================
-
-            xhr.onload = () => {
-
-                try {
-
-                    const result =
-                        JSON.parse(
-                            xhr.responseText
-                        );
-
-
-                    console.log(
-                        "TRAIN RESPONSE:",
-                        result
-                    );
-
-
-                    if (
-                        xhr.status >= 200 &&
-                        xhr.status < 300 &&
-                        result.status === "success"
-                    ) {
-
-                        // Upload completed
-                        progressBar.style.width =
-                            "100%";
-
-
-                        // Green progress bar
-                        progressBar.style.background =
-                            "#19c37d";
-
-
-                        // Indexed status
-                        statusBadge.innerText =
-                            "Indexed ✓";
-
-
-                        statusBadge.style.color =
-                            "#19c37d";
-
-
-                        resolve(result);
-
-                    } else {
-
-                        statusBadge.innerText =
-                            "Failed";
-
-
-                        reject(
-                            new Error(
-                                result.message ||
-                                "Indexing failed"
-                            )
-                        );
-
-                    }
-
-                } catch (error) {
-
-                    statusBadge.innerText =
-                        "Failed";
-
-
-                    reject(error);
-
-                }
-
-            };
-
-
-            // =================================
-            // NETWORK ERROR
-            // =================================
-
-            xhr.onerror = () => {
-
-                statusBadge.innerText =
-                    "Failed";
-
-
-                reject(
-                    new Error(
-                        "Network error during upload"
-                    )
-                );
-
-            };
-
-
-            // Send request
-            xhr.send(formData);
-
-        }
+    formData.append(
+        "file",
+        file
     );
 
+    const response =
+        await fetch(
+            "/train",
+            {
+                method: "POST",
+                body: formData
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (
+        !response.ok ||
+        result.status !== "success"
+    ) {
+
+        throw new Error(
+            result.message ||
+            "Upload failed"
+        );
+
+    }
+
+    return result;
 }
 
 
@@ -362,8 +205,6 @@ trainButton.addEventListener(
         const files =
             Array.from(fileInput.files);
 
-
-        // No files selected
         if (files.length === 0) {
 
             alert(
@@ -373,106 +214,56 @@ trainButton.addEventListener(
             return;
         }
 
-
-        // Disable button
-        trainButton.disabled =
-            true;
-
+        trainButton.disabled = true;
 
         trainButton.innerText =
-            "Indexing...";
-
+            "Processing...";
 
         try {
 
-            // Process each file
-            for (
-                let index = 0;
-                index < files.length;
-                index++
-            ) {
-
-                const file =
-                    files[index];
-
-
-                // Get progress bar
-                const progressBar =
-                    document.getElementById(
-                        `progress-${index}`
-                    );
-
-
-                // Get status
-                const statusBadge =
-                    document.getElementById(
-                        `status-${index}`
-                    );
-
-
-                // Initial status
-                statusBadge.innerText =
-                    "Starting...";
-
+            for (const file of files) {
 
                 console.log(
                     "Uploading:",
                     file.name
                 );
 
-
-                // Upload + index
-                const result =
-                    await uploadDocument(
-                        file,
-                        progressBar,
-                        statusBadge
-                    );
-
+                await uploadDocument(file);
 
                 console.log(
-                    "Indexing successful:",
-                    result
+                    "Upload successful:",
+                    file.name
                 );
-
             }
 
-
-            // All documents completed
             trainButton.innerText =
-                "Indexed ✓";
-
+                "Completed ✓";
 
         } catch (error) {
 
             console.error(
-                "TRAIN ERROR:",
+                "Upload failed:",
                 error
             );
 
-
             trainButton.innerText =
-                "Indexing Failed";
-
+                "Upload Failed";
 
             alert(
                 error.message
             );
 
-
         } finally {
 
-            // Restore button after 2.5 seconds
             setTimeout(() => {
 
                 trainButton.disabled =
                     false;
 
-
                 trainButton.innerText =
                     "Build Knowledge Base";
 
-            }, 2500);
+            }, 2000);
 
         }
 
@@ -481,7 +272,7 @@ trainButton.addEventListener(
 
 
 // =================================
-// CHAT UI
+// ADD USER MESSAGE
 // =================================
 
 function addUserMessage(text) {
@@ -491,74 +282,311 @@ function addUserMessage(text) {
             "chatMessages"
         );
 
-
     const message =
         document.createElement("div");
-
 
     message.className =
         "message";
 
-
     message.style.justifyContent =
         "flex-end";
 
-
     message.innerHTML = `
-
         <div class="message-bubble user-bubble">
-
-            ${text}
-
+            ${escapeHtml(text)}
         </div>
-
     `;
-
 
     chatMessages.appendChild(
         message
     );
 
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+}
+
+
+// =================================
+// ADD AI MESSAGE
+// =================================
+
+function addAssistantMessage(
+    text,
+    sources = []
+) {
+
+    const chatMessages =
+        document.getElementById(
+            "chatMessages"
+        );
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message assistant-message";
+
+    let sourcesHtml = "";
+
+    if (sources.length > 0) {
+
+        sourcesHtml = `
+            <div class="chat-sources">
+                <div class="chat-sources-title">
+                    Sources
+                </div>
+
+                ${sources.map(source => `
+                    <div class="chat-source">
+                        📄 ${escapeHtml(source)}
+                    </div>
+                `).join("")}
+
+            </div>
+        `;
+    }
+
+    message.innerHTML = `
+        <div class="message-avatar">
+            ✦
+        </div>
+
+        <div>
+
+            <div class="message-bubble">
+
+                ${escapeHtml(text)}
+
+                ${sourcesHtml}
+
+            </div>
+
+            <span class="message-time">
+                Just now
+            </span>
+
+        </div>
+    `;
+
+    chatMessages.appendChild(
+        message
+    );
 
     chatMessages.scrollTop =
         chatMessages.scrollHeight;
+}
+
+
+// =================================
+// LOADING MESSAGE
+// =================================
+
+function addLoadingMessage() {
+
+    const chatMessages =
+        document.getElementById(
+            "chatMessages"
+        );
+
+    const message =
+        document.createElement("div");
+
+    message.className =
+        "message assistant-message";
+
+    message.id =
+        "loadingMessage";
+
+    message.innerHTML = `
+        <div class="message-avatar">
+            ✦
+        </div>
+
+        <div>
+
+            <div class="message-bubble">
+
+                <span class="thinking">
+                    Thinking<span>.</span><span>.</span><span>.</span>
+                </span>
+
+            </div>
+
+        </div>
+    `;
+
+    chatMessages.appendChild(
+        message
+    );
+
+    chatMessages.scrollTop =
+        chatMessages.scrollHeight;
+}
+
+
+// =================================
+// REMOVE LOADING MESSAGE
+// =================================
+
+function removeLoadingMessage() {
+
+    const loadingMessage =
+        document.getElementById(
+            "loadingMessage"
+        );
+
+    if (loadingMessage) {
+        loadingMessage.remove();
+    }
+}
+
+
+// =================================
+// ASK RAG API
+// =================================
+
+async function askQuestion(question) {
+
+    const response =
+        await fetch(
+            "/ask",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body: JSON.stringify({
+                    question: question
+                })
+            }
+        );
+
+    const result =
+        await response.json();
+
+    if (!response.ok) {
+
+        throw new Error(
+            result.detail ||
+            "Unable to get an answer."
+        );
+    }
+
+    return result;
+}
+
+
+// =================================
+// ASK BUTTON
+// =================================
+
+async function handleAsk() {
+
+    const question =
+        questionInput.value.trim();
+
+    if (!question) {
+        return;
+    }
+
+
+    // Add user message
+
+    addUserMessage(
+        question
+    );
+
+
+    // Clear input
+
+    questionInput.value = "";
+
+
+    // Disable button
+
+    askButton.disabled =
+        true;
+
+
+    // Show loading
+
+    addLoadingMessage();
+
+
+    try {
+
+        console.log(
+            "Sending question:",
+            question
+        );
+
+
+        const result =
+            await askQuestion(
+                question
+            );
+
+
+        console.log(
+            "RAG response:",
+            result
+        );
+
+
+        removeLoadingMessage();
+
+
+        addAssistantMessage(
+            result.answer,
+            result.sources || []
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Ask error:",
+            error
+        );
+
+
+        removeLoadingMessage();
+
+
+        addAssistantMessage(
+            "Sorry, I couldn't process your question. Please try again."
+        );
+
+    } finally {
+
+        askButton.disabled =
+            false;
+
+        questionInput.focus();
+
+    }
 
 }
 
 
 // =================================
-// CHAT SEND
+// ASK BUTTON CLICK
 // =================================
 
-chatSendButton.addEventListener(
+askButton.addEventListener(
     "click",
-    () => {
-
-        const question =
-            chatInput.value.trim();
-
-
-        if (!question) {
-            return;
-        }
-
-
-        addUserMessage(
-            question
-        );
-
-
-        chatInput.value = "";
-
-    }
+    handleAsk
 );
 
 
 // =================================
-// CHAT ENTER KEY
+// ENTER TO ASK
 // =================================
 
-chatInput.addEventListener(
+questionInput.addEventListener(
     "keydown",
     event => {
 
@@ -569,9 +597,27 @@ chatInput.addEventListener(
 
             event.preventDefault();
 
-            chatSendButton.click();
+            handleAsk();
 
         }
 
     }
 );
+
+
+// =================================
+// HTML ESCAPE
+// =================================
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement(
+            "div"
+        );
+
+    div.textContent =
+        text;
+
+    return div.innerHTML;
+}
