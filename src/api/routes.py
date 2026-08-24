@@ -1,10 +1,13 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 import traceback
 
+from src.auth.dependencies import get_current_user
 from src.retrieval.retriever import retrieve_documents
 from src.prompts.prompts import build_prompt
 from src.llm.generator import generate_answer
+
+
 
 
 router = APIRouter()
@@ -20,7 +23,7 @@ class AskResponse(BaseModel):
 
 
 @router.post("/ask", response_model=AskResponse)
-def ask_question(request: AskRequest):
+def ask_question(request: AskRequest, current_user=Depends(get_current_user)):
 
     question = request.question.strip()
 

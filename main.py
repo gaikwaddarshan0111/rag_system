@@ -5,6 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from src.vectordb.index_documents import index_document
 from src.api.routes import router
+from src.api.auth_routes import router as auth_router
 
 app = FastAPI(
     title="RAG SYSTEM",
@@ -132,4 +133,4 @@ async def train_document(
         }
 
 app.include_router(router)
-    
+app.include_router(auth_router)
