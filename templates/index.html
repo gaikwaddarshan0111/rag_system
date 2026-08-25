@@ -2,65 +2,39 @@
 <html lang="en">
 
 <head>
-
     <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>RAG System</title>
 
-    <link
-        rel="stylesheet"
-        href="/static/css/style.css"
-    >
-
+    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 
-
 <body>
-
 
 <!-- =========================================================
      LOGIN SCREEN
 ========================================================= -->
 
-<div
-    id="loginScreen"
-    class="login-screen"
->
-
+<div id="loginScreen" class="login-screen">
 
     <div class="login-card">
 
+        <div class="login-logo">✦</div>
 
-        <div class="login-logo">
-            ✦
-        </div>
-
-
-        <h1>
-            RAG System
-        </h1>
-
+        <h1>RAG System</h1>
 
         <p>
             Sign in to access your knowledge base.
         </p>
 
-
         <form id="loginForm">
 
-
             <div class="login-field">
-
 
                 <label for="username">
                     Username
                 </label>
-
 
                 <input
                     type="text"
@@ -70,17 +44,14 @@
                     required
                 >
 
-
             </div>
 
 
             <div class="login-field">
 
-
                 <label for="password">
                     Password
                 </label>
-
 
                 <input
                     type="password"
@@ -89,7 +60,6 @@
                     autocomplete="current-password"
                     required
                 >
-
 
             </div>
 
@@ -108,25 +78,18 @@
                 class="login-error hidden"
             ></div>
 
-
         </form>
-
 
     </div>
 
-
 </div>
-
 
 
 <!-- =========================================================
      APPLICATION
 ========================================================= -->
 
-<div
-    class="app hidden"
-    id="app"
->
+<div class="app hidden" id="app">
 
 
     <!-- =====================================================
@@ -140,25 +103,20 @@
 
         <div class="brand">
 
-
             <div class="brand-icon">
                 ✦
             </div>
-
 
             <span>
                 RAG System
             </span>
 
-
         </div>
-
 
 
         <!-- PROFILE -->
 
         <div class="profile">
-
 
             <div
                 class="avatar"
@@ -170,16 +128,13 @@
 
             <div class="profile-info">
 
-
                 <strong id="loggedInUsername">
                     User
                 </strong>
 
-
                 <span id="loggedInRole">
                     Agent
                 </span>
-
 
             </div>
 
@@ -188,14 +143,11 @@
                 class="logout-button"
                 id="logoutButton"
                 title="Logout"
-                type="button"
             >
                 Logout
             </button>
 
-
         </div>
-
 
 
         <!-- =================================================
@@ -204,13 +156,10 @@
 
         <div class="sidebar-section">
 
-
             <div class="section-title">
                 WORKSPACE
             </div>
 
-
-            <!-- HOME -->
 
             <button
                 id="homeNav"
@@ -227,9 +176,6 @@
             </button>
 
 
-
-            <!-- TEAM - ADMIN ONLY -->
-
             <button
                 id="teamsNav"
                 class="sidebar-item admin-only"
@@ -244,9 +190,7 @@
 
             </button>
 
-
         </div>
-
 
 
         <!-- =================================================
@@ -256,13 +200,10 @@
 
         <div class="sidebar-section admin-only">
 
-
             <div class="section-title">
                 KNOWLEDGE
             </div>
 
-
-            <!-- DOCUMENTS -->
 
             <button
                 id="documentsNav"
@@ -278,9 +219,7 @@
 
             </button>
 
-
         </div>
-
 
 
         <!-- =================================================
@@ -288,7 +227,6 @@
         ================================================== -->
 
         <div class="sidebar-bottom">
-
 
             <button
                 class="sidebar-item"
@@ -302,7 +240,6 @@
                 Settings
 
             </button>
-
 
         </div>
 
@@ -318,30 +255,22 @@
     <main class="main-content">
 
 
-        <!-- =================================================
-             TOP BAR
-        ================================================== -->
+        <!-- TOP BAR -->
 
         <div class="topbar">
 
-
             <div>
-
 
                 <h1>
                     Knowledge Base
                 </h1>
 
-
                 <p>
                     Upload documents and build your RAG knowledge base.
                 </p>
 
-
             </div>
 
-
-            <!-- ADMIN ONLY -->
 
             <button
                 class="add-button admin-only"
@@ -350,7 +279,6 @@
             >
                 + Add New
             </button>
-
 
         </div>
 
@@ -363,8 +291,6 @@
         <div class="mode-tabs">
 
 
-            <!-- TRAIN - ADMIN ONLY -->
-
             <button
                 class="mode-tab active admin-only"
                 data-mode="train"
@@ -374,8 +300,6 @@
                 Train
             </button>
 
-
-            <!-- ASK - EVERY AUTHENTICATED USER -->
 
             <button
                 class="mode-tab"
@@ -402,10 +326,6 @@
         >
 
 
-            <!-- =================================================
-                 UPLOAD CARD
-            ================================================== -->
-
             <div class="upload-card">
 
 
@@ -429,9 +349,6 @@
                 </span>
 
 
-
-                <!-- FILE INPUT -->
-
                 <input
                     type="file"
                     id="fileInput"
@@ -441,44 +358,30 @@
                 >
 
 
-
-                <!-- CATEGORY -->
-
                 <div class="category-selector">
-
 
                     <label for="documentCategory">
                         Knowledge Category
                     </label>
 
-
-                    <select
-                        id="documentCategory"
-                    >
+                    <select id="documentCategory">
 
                         <option value="salesforce">
                             Salesforce (SF)
                         </option>
 
-
                         <option value="non_sf">
                             Non-SF
                         </option>
-
 
                         <option value="telecom">
                             Telecom
                         </option>
 
-
                     </select>
-
 
                 </div>
 
-
-
-                <!-- CHOOSE FILE -->
 
                 <button
                     id="chooseFileButton"
@@ -488,9 +391,6 @@
                     Choose Files
                 </button>
 
-
-
-                <!-- BUILD -->
 
                 <button
                     id="trainButton"
@@ -505,30 +405,23 @@
 
 
 
-            <!-- =================================================
-                 DOCUMENT HEADER
-            ================================================== -->
+            <!-- DOCUMENT HEADER -->
 
             <div class="documents-header">
 
-
                 <div>
-
 
                     <span class="breadcrumb">
                         Home
                     </span>
 
-
                     <span class="separator">
                         ›
                     </span>
 
-
                     <strong>
                         Knowledge Base
                     </strong>
-
 
                 </div>
 
@@ -537,22 +430,17 @@
                     0 documents
                 </span>
 
-
             </div>
 
 
 
-            <!-- =================================================
-                 DOCUMENT LIST HEADER
-            ================================================== -->
+            <!-- DOCUMENT LIST -->
 
             <div class="knowledge-documents-header">
-
 
                 <div class="knowledge-documents-title">
                     Knowledge Base
                 </div>
-
 
                 <div
                     id="documentCountSecondary"
@@ -561,41 +449,29 @@
                     0 documents
                 </div>
 
-
             </div>
 
-
-
-            <!-- =================================================
-                 DOCUMENT LIST
-            ================================================== -->
 
             <div
                 id="documentList"
                 class="document-list"
             >
 
-
                 <div class="empty-state">
-
 
                     <div>
                         📄
                     </div>
 
-
                     <p>
                         Loading documents.
                     </p>
-
 
                     <span>
                         Upload a document to get started.
                     </span>
 
-
                 </div>
-
 
             </div>
 
@@ -624,81 +500,162 @@
 
                 <div class="ask-header">
 
+                    <div class="ask-header-top">
 
-                    <div class="ask-icon">
-                        ✦
+                        <div class="ask-icon">
+                            ✦
+                        </div>
+
+                        <div class="ask-header-copy">
+
+                            <div class="ask-eyebrow">
+                                KNOWLEDGE ASSISTANT
+                            </div>
+
+                            <h2>
+                                Ask your knowledge base
+                            </h2>
+
+                            <p>
+                                Ask questions about your uploaded documents and get grounded answers with sources.
+                            </p>
+
+                        </div>
+
                     </div>
 
 
-                    <h2>
-                        Ask your knowledge base
-                    </h2>
+                    <div class="ask-header-status">
 
+                        <span class="ask-live-dot"></span>
 
-                    <p>
-                        Ask questions about your uploaded documents.
-                    </p>
+                        RAG retrieval active
 
+                        <span class="ask-status-divider"></span>
 
-                </div>
+                        Sources included automatically
 
-
-
-                <!-- =================================================
-                     ASK TOOLBAR
-                ================================================== -->
-
-                <div class="ask-toolbar">
-
-
-                    <div></div>
-
-
-                    <button
-                        id="clearAskButton"
-                        class="clear-button"
-                        type="button"
-                    >
-                        Clear
-                    </button>
-
+                    </div>
 
                 </div>
 
 
 
                 <!-- =================================================
-                     ASK RESULTS / SEARCH HISTORY
+                     ASK RESULTS
                 ================================================== -->
 
                 <div
                     id="askResults"
                     class="ask-results"
                 >
+
+
+                    <div
+                        id="askEmptyState"
+                        class="ask-empty-state"
+                    >
+
+                        <div class="ask-empty-orb">
+                            ✦
+                        </div>
+
+                        <h3>
+                            Start a conversation
+                        </h3>
+
+                        <p>
+                            Ask about Salesforce, Non-SF, Telecom, or any document in your knowledge base.
+                        </p>
+
+
+                        <div class="suggestion-row">
+
+
+                            <button
+                                type="button"
+                                class="suggestion-chip"
+                                data-question="What documents are available?"
+                            >
+                                What documents are available?
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="suggestion-chip"
+                                data-question="What is RAG?"
+                            >
+                                What is RAG?
+                            </button>
+
+
+                            <button
+                                type="button"
+                                class="suggestion-chip"
+                                data-question="What information is available in Salesforce?"
+                            >
+                                Salesforce knowledge
+                            </button>
+
+
+                        </div>
+
+                    </div>
+
+
                 </div>
 
 
 
                 <!-- =================================================
-                     QUESTION BOX
+                     QUESTION COMPOSER
                 ================================================== -->
 
-                <div class="question-container">
+                <div class="ask-composer">
 
 
-                    <textarea
-                        id="questionInput"
-                        placeholder="Ask a question about your documents..."
-                    ></textarea>
+                    <div class="question-container">
 
 
-                    <button
-                        id="askButton"
-                        class="send-button"
-                        type="button"
-                    >
-                        ↑
-                    </button>
+                        <textarea
+                            id="questionInput"
+                            placeholder="Ask a question about your documents..."
+                            rows="1"
+                        ></textarea>
+
+
+                        <button
+                            id="askButton"
+                            class="send-button"
+                            type="button"
+                            aria-label="Send question"
+                        >
+                            ↑
+                        </button>
+
+
+                    </div>
+
+
+                    <div class="composer-footer">
+
+
+                        <span>
+                            Enter to send · Shift + Enter for a new line
+                        </span>
+
+
+                        <button
+                            id="clearAskButton"
+                            class="clear-button"
+                            type="button"
+                        >
+                            Clear conversation
+                        </button>
+
+
+                    </div>
 
 
                 </div>
@@ -707,7 +664,6 @@
 
                 <!-- =================================================
                      LEGACY ANSWER CONTAINER
-                     KEPT FOR EXISTING JAVASCRIPT
                 ================================================== -->
 
                 <div
@@ -716,21 +672,18 @@
                     aria-hidden="true"
                 >
 
-
                     <div class="answer-label">
                         AI Assistant
                     </div>
 
 
-                    <div id="answer">
-                    </div>
+                    <div id="answer"></div>
 
 
                     <div
                         id="sources"
                         class="sources"
-                    >
-                    </div>
+                    ></div>
 
 
                 </div>
@@ -753,9 +706,7 @@
     <aside class="assistant">
 
 
-        <!-- =================================================
-             ASSISTANT HEADER
-        ================================================== -->
+        <!-- ASSISTANT HEADER -->
 
         <div class="assistant-header">
 
@@ -770,7 +721,6 @@
 
                 <div>
 
-
                     <strong>
                         AI Assistant
                     </strong>
@@ -778,24 +728,17 @@
 
                     <div class="status">
 
-
                         <span></span>
-
 
                         RAG Active
 
-
                     </div>
-
 
                 </div>
 
 
             </div>
 
-
-
-            <!-- NEW / CLEAR CONVERSATION -->
 
             <button
                 id="newConversationButton"
@@ -812,41 +755,156 @@
 
 
         <!-- =================================================
-             CHAT
+             ASSISTANT OVERVIEW
         ================================================== -->
 
-        <div
-            id="chatMessages"
-            class="chat-messages"
-        >
+        <div class="assistant-overview">
 
 
-            <!-- INITIAL MESSAGE -->
+            <!-- SYSTEM STATUS -->
 
-            <div class="message assistant-message">
+            <div class="assistant-card status-card">
 
 
-                <div class="message-avatar">
-                    ✦
+                <div class="assistant-card-heading">
+                    System Status
                 </div>
 
 
-                <div>
+                <div class="system-status-row">
+
+                    <span class="system-status-label">
+                        Knowledge Base
+                    </span>
 
 
-                    <div class="message-bubble">
+                    <strong id="assistantDocumentCount">
+                        Ready
+                    </strong>
+
+                </div>
 
 
-                        Hello! I'm ready to answer questions
-                        about your knowledge base.
+                <div class="system-status-row">
+
+                    <span class="system-status-label">
+                        Total Chunks
+                    </span>
+
+
+                    <strong id="assistantChunkCount">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="system-status-row">
+
+                    <span class="system-status-label">
+                        Last Updated
+                    </span>
+
+
+                    <strong id="assistantLastUpdated">
+                        —
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- KNOWLEDGE DOMAINS -->
+
+            <div class="assistant-card domains-card">
+
+
+                <div class="assistant-card-heading">
+                    Knowledge Domains
+                </div>
+
+
+                <div
+                    class="domain-list"
+                    id="assistantDomainList"
+                >
+
+
+                    <div class="domain-row">
+
+
+                        <span class="domain-icon sf">
+                            SF
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                Salesforce (SF)
+                            </strong>
+
+                            <span>
+                                Loading...
+                            </span>
+
+                        </div>
 
 
                     </div>
 
 
-                    <span class="message-time">
-                        Just now
-                    </span>
+
+                    <div class="domain-row">
+
+
+                        <span class="domain-icon nonsf">
+                            NS
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                Non-SF
+                            </strong>
+
+                            <span>
+                                Loading...
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="domain-row">
+
+
+                        <span class="domain-icon telecom">
+                            TC
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                Telecom
+                            </strong>
+
+                            <span>
+                                Loading...
+                            </span>
+
+                        </div>
+
+
+                    </div>
 
 
                 </div>
@@ -860,43 +918,59 @@
 
 
         <!-- =================================================
-             CHAT INPUT
+             ASSISTANT TIP
         ================================================== -->
 
-        <div class="chat-input-container">
+        <div class="assistant-tip">
 
 
-            <textarea
-                id="chatInput"
-                placeholder="Ask a question about your documents..."
-            ></textarea>
+            <span class="tip-icon">
+                ✦
+            </span>
 
 
-            <button
-                id="chatSendButton"
-                class="send-button"
-                type="button"
-            >
-                ↑
-            </button>
+            <div>
 
+                <strong>
+                    Grounded answers
+                </strong>
+
+
+                <p>
+                    Answers are generated from your indexed documents.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="assistant-disclaimer">
+
+            AI can make mistakes.
+            Verify important information.
 
         </div>
 
 
 
         <!-- =================================================
-             DISCLAIMER
+             LEGACY ELEMENTS
+             KEPT FOR JAVASCRIPT COMPATIBILITY
         ================================================== -->
 
-        <div class="disclaimer">
+        <div
+            id="chatMessages"
+            class="chat-messages legacy-hidden"
+        ></div>
 
 
-            AI can make mistakes.
-            Verify important information.
-
-
-        </div>
+        <textarea
+            id="chatInput"
+            class="legacy-hidden"
+        ></textarea>
 
 
     </aside>

@@ -10,34 +10,26 @@
 const loginScreen =
     document.getElementById("loginScreen");
 
-
 const app =
     document.getElementById("app");
-
 
 const loginForm =
     document.getElementById("loginForm");
 
-
 const loginButton =
     document.getElementById("loginButton");
-
 
 const loginError =
     document.getElementById("loginError");
 
-
 const loggedInUsername =
     document.getElementById("loggedInUsername");
-
 
 const loggedInRole =
     document.getElementById("loggedInRole");
 
-
 const userAvatar =
     document.getElementById("userAvatar");
-
 
 const logoutButton =
     document.getElementById("logoutButton");
@@ -50,13 +42,39 @@ const logoutButton =
 const askResults =
     document.getElementById("askResults");
 
-
 const clearAskButton =
     document.getElementById("clearAskButton");
 
-
 const newConversationButton =
     document.getElementById("newConversationButton");
+
+const askEmptyState =
+    document.getElementById("askEmptyState");
+
+
+// =========================================================
+// ASSISTANT OVERVIEW
+// =========================================================
+
+const assistantDocumentCount =
+    document.getElementById(
+        "assistantDocumentCount"
+    );
+
+const assistantChunkCount =
+    document.getElementById(
+        "assistantChunkCount"
+    );
+
+const assistantLastUpdated =
+    document.getElementById(
+        "assistantLastUpdated"
+    );
+
+const assistantDomainList =
+    document.getElementById(
+        "assistantDomainList"
+    );
 
 
 // =========================================================
@@ -66,10 +84,8 @@ const newConversationButton =
 const homeNav =
     document.getElementById("homeNav");
 
-
 const documentsNav =
     document.getElementById("documentsNav");
-
 
 const teamsNav =
     document.getElementById("teamsNav");
@@ -82,10 +98,8 @@ const teamsNav =
 const modeTabs =
     document.querySelectorAll(".mode-tab");
 
-
 const trainMode =
     document.getElementById("trainMode");
-
 
 const askMode =
     document.getElementById("askMode");
@@ -98,29 +112,35 @@ const askMode =
 const fileInput =
     document.getElementById("fileInput");
 
-
 const documentCategory =
-    document.getElementById("documentCategory");
-
+    document.getElementById(
+        "documentCategory"
+    );
 
 const chooseFileButton =
-    document.getElementById("chooseFileButton");
-
+    document.getElementById(
+        "chooseFileButton"
+    );
 
 const addDocumentButton =
-    document.getElementById("addDocumentButton");
-
+    document.getElementById(
+        "addDocumentButton"
+    );
 
 const documentList =
-    document.getElementById("documentList");
-
+    document.getElementById(
+        "documentList"
+    );
 
 const documentCount =
-    document.getElementById("documentCount");
-
+    document.getElementById(
+        "documentCount"
+    );
 
 const trainButton =
-    document.getElementById("trainButton");
+    document.getElementById(
+        "trainButton"
+    );
 
 
 // =========================================================
@@ -128,23 +148,29 @@ const trainButton =
 // =========================================================
 
 const questionInput =
-    document.getElementById("questionInput");
-
+    document.getElementById(
+        "questionInput"
+    );
 
 const askButton =
-    document.getElementById("askButton");
-
+    document.getElementById(
+        "askButton"
+    );
 
 const answerContainer =
-    document.getElementById("answerContainer");
-
+    document.getElementById(
+        "answerContainer"
+    );
 
 const answerElement =
-    document.getElementById("answer");
-
+    document.getElementById(
+        "answer"
+    );
 
 const sourcesElement =
-    document.getElementById("sources");
+    document.getElementById(
+        "sources"
+    );
 
 
 // =========================================================
@@ -263,6 +289,23 @@ function formatDate(dateString) {
 
 
 // =========================================================
+// FORMAT TIME
+// =========================================================
+
+function formatTime(date = new Date()) {
+
+    return date.toLocaleTimeString(
+        undefined,
+        {
+            hour: "numeric",
+            minute: "2-digit"
+        }
+    );
+
+}
+
+
+// =========================================================
 // LOGOUT
 // =========================================================
 
@@ -279,6 +322,7 @@ function logout() {
     localStorage.removeItem(
         "role"
     );
+
 
     showLogin();
 
@@ -438,7 +482,8 @@ function showApp() {
             tab => {
 
                 if (
-                    tab.dataset.mode === "ask"
+                    tab.dataset.mode ===
+                    "ask"
                 ) {
 
                     tab.classList.add(
@@ -459,30 +504,7 @@ function showApp() {
     }
 
 
-    // =====================================================
-    // HIDE OLD DOCUMENT LIST
-    // =====================================================
-
-    const oldDocumentHeader =
-        document.querySelector(
-            ".documents-header"
-        );
-
-
-    if (oldDocumentHeader) {
-
-        oldDocumentHeader.style.display =
-            "none";
-
-    }
-
-
-    if (documentList) {
-
-        documentList.style.display =
-            "none";
-
-    }
+    loadAssistantOverview();
 
 }
 
@@ -547,13 +569,14 @@ if (loginForm) {
                                     "application/json"
                             },
 
-                            body: JSON.stringify({
-                                username:
-                                    username,
+                            body:
+                                JSON.stringify({
+                                    username:
+                                        username,
 
-                                password:
-                                    password
-                            })
+                                    password:
+                                        password
+                                })
                         }
                     );
 
@@ -571,10 +594,6 @@ if (loginForm) {
 
                 }
 
-
-                // ==========================================
-                // STORE AUTH DATA
-                // ==========================================
 
                 localStorage.setItem(
                     "access_token",
@@ -622,7 +641,6 @@ if (loginForm) {
                 loginButton.disabled =
                     false;
 
-
                 loginButton.innerText =
                     "Sign In";
 
@@ -648,10 +666,6 @@ modeTabs.forEach(
                 const mode =
                     tab.dataset.mode;
 
-
-                // ==========================================
-                // SECURITY CHECK
-                // ==========================================
 
                 if (
                     mode === "train" &&
@@ -884,7 +898,6 @@ if (fileInput) {
 
 }
 
-
 // =========================================================
 // UPLOAD DOCUMENT
 // =========================================================
@@ -1057,6 +1070,10 @@ if (trainButton) {
                 await loadAllDocuments();
 
 
+                // Refresh assistant statistics
+                await loadAssistantOverview();
+
+
             } catch (error) {
 
                 console.error(
@@ -1170,14 +1187,15 @@ function createDocumentCard(
 
 
                 <span>
-                    ${doc.chunk_count}
+                    ${doc.chunk_count || 0}
                     chunks
                 </span>
 
 
                 <span>
                     ${escapeHtml(
-                        doc.uploaded_by
+                        doc.uploaded_by ||
+                        "Unknown"
                     )}
                 </span>
 
@@ -1263,12 +1281,21 @@ async function loadAllDocuments() {
         }
 
 
-        renderAllDocuments(
+        const documentArray =
             Array.isArray(
                 documents
             )
                 ? documents
-                : []
+                : [];
+
+
+        renderAllDocuments(
+            documentArray
+        );
+
+
+        updateAssistantOverview(
+            documentArray
         );
 
 
@@ -1378,6 +1405,11 @@ function renderAllDocuments(
                 <p>
                     No documents yet.
                 </p>
+
+
+                <span>
+                    Upload a document to get started.
+                </span>
 
             </div>
 
@@ -2340,7 +2372,7 @@ if (teamsNav) {
 
 
 // =========================================================
-// SHOW TEAM FOLDER
+// SHOW TEAM DOCUMENTS
 // =========================================================
 
 function showTeamDocuments(
@@ -2447,28 +2479,20 @@ function showTeamDocuments(
 
             <div class="folder-empty">
 
-
                 <div class="folder-empty-icon">
-
                     📂
-
                 </div>
 
 
                 <h3>
-
                     No documents
-
                 </h3>
 
 
                 <p>
-
                     This folder doesn't contain
                     any documents yet.
-
                 </p>
-
 
             </div>
 
@@ -2511,8 +2535,6 @@ function showTeamDocuments(
     }
 
 }
-
-
 // =========================================================
 // ASK - USER MESSAGE
 // =========================================================
@@ -2521,36 +2543,45 @@ function addUserMessage(
     text
 ) {
 
-    const chatMessages =
-        document.getElementById(
-            "chatMessages"
-        );
-
-
-    if (!chatMessages) {
+    if (!askResults) {
 
         return;
 
     }
 
 
-    const message =
+    hideAskEmptyState();
+
+
+    const result =
         document.createElement(
             "div"
         );
 
 
-    message.className =
-        "message";
+    result.className =
+        "ask-result user-result";
 
 
-    message.style.justifyContent =
-        "flex-end";
+    result.innerHTML = `
+
+        <div class="ask-message-meta">
+
+            <span class="ask-message-author">
+                You
+            </span>
 
 
-    message.innerHTML = `
+            <span class="ask-message-time">
 
-        <div class="message-bubble user-bubble">
+                ${formatTime()}
+
+            </span>
+
+        </div>
+
+
+        <div class="ask-user-bubble">
 
             ${escapeHtml(text)}
 
@@ -2559,13 +2590,52 @@ function addUserMessage(
     `;
 
 
-    chatMessages.appendChild(
-        message
+    askResults.appendChild(
+        result
     );
 
 
-    chatMessages.scrollTop =
-        chatMessages.scrollHeight;
+    scrollAskToBottom();
+
+}
+
+
+// =========================================================
+// HIDE ASK EMPTY STATE
+// =========================================================
+
+function hideAskEmptyState() {
+
+    if (!askEmptyState) {
+
+        return;
+
+    }
+
+
+    askEmptyState.classList.add(
+        "hidden"
+    );
+
+}
+
+
+// =========================================================
+// SHOW ASK EMPTY STATE
+// =========================================================
+
+function showAskEmptyState() {
+
+    if (!askEmptyState) {
+
+        return;
+
+    }
+
+
+    askEmptyState.classList.remove(
+        "hidden"
+    );
 
 }
 
@@ -2579,213 +2649,626 @@ function addAssistantMessage(
     sources = []
 ) {
 
-    const chatMessages =
-        document.getElementById(
-            "chatMessages"
-        );
-
-
-    if (!chatMessages) {
+    if (!askResults) {
 
         return;
 
     }
 
 
-    const message =
+    hideAskEmptyState();
+
+
+    const result =
         document.createElement(
             "div"
         );
 
 
-    message.className =
-        "message assistant-message";
+    result.className =
+        "ask-result assistant-result";
 
 
-    let sourcesHtml =
-        "";
+    const sourceArray =
+        normalizeSources(
+            sources
+        );
 
 
-    if (
-        sources.length > 0
-    ) {
+    result.innerHTML = `
 
-        sourcesHtml = `
+        <div class="ask-message-meta">
 
-            <div class="chat-sources">
+            <span class="ask-message-author ai-author">
+
+                <span class="ai-mini-icon">
+                    ✦
+                </span>
+
+                AI Assistant
+
+            </span>
 
 
-                <div class="chat-sources-title">
+            <span class="ask-message-time">
+
+                ${formatTime()}
+
+            </span>
+
+        </div>
+
+
+        <div class="ask-ai-card">
+
+
+            <div class="ask-ai-answer">
+
+                ${formatAnswer(text)}
+
+            </div>
+
+
+            ${
+                sourceArray.length > 0
+                    ? createSourcesHtml(
+                        sourceArray
+                    )
+                    : ""
+            }
+
+
+        </div>
+
+    `;
+
+
+    askResults.appendChild(
+        result
+    );
+
+
+    scrollAskToBottom();
+
+}
+
+
+// =========================================================
+// FORMAT ANSWER
+// =========================================================
+
+function formatAnswer(
+    text
+) {
+
+    if (!text) {
+
+        return "";
+
+    }
+
+
+    const escaped =
+        escapeHtml(
+            text
+        );
+
+
+    return escaped
+        .replace(
+            /\*\*(.*?)\*\*/g,
+            "<strong>$1</strong>"
+        )
+        .replace(
+            /\n\n/g,
+            "</p><p>"
+        )
+        .replace(
+            /\n/g,
+            "<br>"
+        );
+
+}
+
+
+// =========================================================
+// NORMALIZE SOURCES
+// =========================================================
+
+function normalizeSources(
+    sources
+) {
+
+    if (!Array.isArray(sources)) {
+
+        return [];
+
+    }
+
+
+    return sources
+        .map(
+            source => {
+
+                if (
+                    typeof source ===
+                    "string"
+                ) {
+
+                    return {
+                        name: source,
+                        page: null,
+                        score: null
+                    };
+
+                }
+
+
+                if (
+                    source &&
+                    typeof source ===
+                    "object"
+                ) {
+
+                    return {
+
+                        name:
+                            source.filename ||
+                            source.file_name ||
+                            source.source ||
+                            source.name ||
+                            source.title ||
+                            "Document",
+
+                        page:
+                            source.page ||
+                            source.page_number ||
+                            null,
+
+                        score:
+                            source.score ||
+                            source.similarity ||
+                            null
+
+                    };
+
+                }
+
+
+                return null;
+
+            }
+        )
+        .filter(Boolean);
+
+}
+
+
+// =========================================================
+// CREATE SOURCES HTML
+// =========================================================
+
+function createSourcesHtml(
+    sources
+) {
+
+    return `
+
+        <details class="ask-sources">
+
+            <summary>
+
+                <span class="sources-summary-left">
+
+                    <span class="sources-icon">
+                        ◈
+                    </span>
 
                     Sources
 
-                </div>
+                    <span class="sources-count">
 
+                        ${sources.length}
+
+                    </span>
+
+                </span>
+
+
+                <span class="sources-chevron">
+                    ›
+                </span>
+
+            </summary>
+
+
+            <div class="sources-list">
 
                 ${sources.map(
                     source => `
 
-                        <div class="chat-source">
+                        <div class="source-item">
 
-                            📄
-                            ${escapeHtml(
-                                source
-                            )}
+                            <div class="source-file-icon">
+                                📄
+                            </div>
+
+
+                            <div class="source-content">
+
+                                <div class="source-name">
+
+                                    ${escapeHtml(
+                                        source.name
+                                    )}
+
+                                </div>
+
+
+                                ${
+                                    source.page
+                                        ? `
+                                            <div class="source-page">
+
+                                                Page
+                                                ${escapeHtml(
+                                                    source.page
+                                                )}
+
+                                            </div>
+                                        `
+                                        : ""
+                                }
+
+
+                            </div>
+
+
+                            ${
+                                source.score !== null
+                                    ? `
+                                        <span class="source-score">
+
+                                            ${(
+                                                Number(
+                                                    source.score
+                                                ) * 100
+                                            ).toFixed(0)}%
+
+                                        </span>
+                                    `
+                                    : ""
+                            }
 
                         </div>
 
                     `
                 ).join("")}
 
-
             </div>
 
-        `;
-
-    }
-
-
-    message.innerHTML = `
-
-        <div class="message-avatar">
-
-            ✦
-
-        </div>
-
-
-        <div>
-
-
-            <div class="message-bubble">
-
-                ${escapeHtml(text)}
-
-                ${sourcesHtml}
-
-            </div>
-
-
-            <span class="message-time">
-
-                Just now
-
-            </span>
-
-
-        </div>
+        </details>
 
     `;
-
-
-    chatMessages.appendChild(
-        message
-    );
-
-
-    chatMessages.scrollTop =
-        chatMessages.scrollHeight;
 
 }
 
 
 // =========================================================
-// ASK - LOADING
+// ASK - LOADING MESSAGE
 // =========================================================
 
 function addLoadingMessage() {
 
-    const chatMessages =
-        document.getElementById(
-            "chatMessages"
-        );
-
-
-    if (!chatMessages) {
+    if (!askResults) {
 
         return;
 
     }
 
 
-    const message =
+    hideAskEmptyState();
+
+
+    removeLoadingMessage();
+
+
+    const loading =
         document.createElement(
             "div"
         );
 
 
-    message.className =
-        "message assistant-message";
+    loading.id =
+        "askLoadingMessage";
 
 
-    message.id =
-        "loadingMessage";
+    loading.className =
+        "ask-result assistant-result ask-loading-result";
 
 
-    message.innerHTML = `
+    loading.innerHTML = `
 
-        <div class="message-avatar">
+        <div class="ask-message-meta">
 
-            ✦
+            <span class="ask-message-author ai-author">
+
+                <span class="ai-mini-icon">
+                    ✦
+                </span>
+
+                AI Assistant
+
+            </span>
 
         </div>
 
 
-        <div>
+        <div class="ask-ai-card ask-loading-card">
 
+            <div class="loading-row">
 
-            <div class="message-bubble">
-
-
-                <span class="thinking">
-
-                    Thinking
-
-                    <span>.</span>
-                    <span>.</span>
-                    <span>.</span>
-
+                <span class="loading-orb">
+                    ✦
                 </span>
 
 
-            </div>
+                <div>
 
+                    <div class="loading-title">
+                        Thinking...
+                    </div>
+
+
+                    <div class="loading-subtitle">
+
+                        Searching your knowledge base
+
+                    </div>
+
+                </div>
+
+
+                <div class="loading-dots">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+            </div>
 
         </div>
 
     `;
 
 
-    chatMessages.appendChild(
-        message
+    askResults.appendChild(
+        loading
     );
 
 
-    chatMessages.scrollTop =
-        chatMessages.scrollHeight;
+    scrollAskToBottom();
 
 }
 
 
 // =========================================================
-// ASK - REMOVE LOADING
+// REMOVE LOADING MESSAGE
 // =========================================================
 
 function removeLoadingMessage() {
 
-    const loadingMessage =
+    const loading =
         document.getElementById(
-            "loadingMessage"
+            "askLoadingMessage"
         );
 
 
-    if (loadingMessage) {
+    if (loading) {
 
-        loadingMessage.remove();
+        loading.remove();
 
     }
 
 }
+
+
+// =========================================================
+// SCROLL ASK TO BOTTOM
+// =========================================================
+
+function scrollAskToBottom() {
+
+    if (!askResults) {
+
+        return;
+
+    }
+
+
+    requestAnimationFrame(
+        () => {
+
+            askResults.scrollTo({
+                top:
+                    askResults.scrollHeight,
+
+                behavior:
+                    "smooth"
+            });
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// CLEAR ASK HISTORY
+// =========================================================
+
+function clearAskHistory() {
+
+    console.log(
+        "Clearing Ask conversation"
+    );
+
+
+    removeLoadingMessage();
+
+
+    if (askResults) {
+
+        askResults
+            .querySelectorAll(
+                ".ask-result"
+            )
+            .forEach(
+                element => {
+
+                    element.remove();
+
+                }
+            );
+
+    }
+
+
+    showAskEmptyState();
+
+
+    if (questionInput) {
+
+        questionInput.value =
+            "";
+
+        questionInput.style.height =
+            "auto";
+
+    }
+
+
+    const chatInput =
+        document.getElementById(
+            "chatInput"
+        );
+
+
+    if (chatInput) {
+
+        chatInput.value =
+            "";
+
+    }
+
+
+    if (answerContainer) {
+
+        answerContainer.classList.add(
+            "hidden"
+        );
+
+    }
+
+
+    if (answerElement) {
+
+        answerElement.innerHTML =
+            "";
+
+    }
+
+
+    if (sourcesElement) {
+
+        sourcesElement.innerHTML =
+            "";
+
+    }
+
+
+    if (questionInput) {
+
+        questionInput.focus();
+
+    }
+
+}
+
+
+// =========================================================
+// CLEAR BUTTON
+// =========================================================
+
+if (clearAskButton) {
+
+    clearAskButton.addEventListener(
+        "click",
+        clearAskHistory
+    );
+
+}
+
+
+// =========================================================
+// NEW CONVERSATION
+// =========================================================
+
+if (newConversationButton) {
+
+    newConversationButton.addEventListener(
+        "click",
+        clearAskHistory
+    );
+
+}
+
+
+// =========================================================
+// SUGGESTION CHIPS
+// =========================================================
+
+document
+    .querySelectorAll(
+        ".suggestion-chip"
+    )
+    .forEach(
+        chip => {
+
+            chip.addEventListener(
+                "click",
+                () => {
+
+                    const question =
+                        chip.dataset.question;
+
+
+                    if (!questionInput) {
+
+                        return;
+
+                    }
+
+
+                    questionInput.value =
+                        question;
+
+
+                    autoResizeQuestionInput();
+
+
+                    questionInput.focus();
+
+
+                    handleAsk();
+
+                }
+            );
+
+        }
+    );
 
 
 // =========================================================
@@ -2827,17 +3310,29 @@ async function askQuestion(
 
                 },
 
-                body: JSON.stringify({
-                    question:
-                        question
-                })
+                body:
+                    JSON.stringify({
+                        question:
+                            question
+                    })
 
             }
         );
 
 
-    const result =
-        await response.json();
+    let result;
+
+
+    try {
+
+        result =
+            await response.json();
+
+    } catch {
+
+        result = {};
+
+    }
 
 
     if (
@@ -2853,10 +3348,22 @@ async function askQuestion(
     }
 
 
+    if (
+        response.status === 403
+    ) {
+
+        throw new Error(
+            "You do not have permission to ask questions."
+        );
+
+    }
+
+
     if (!response.ok) {
 
         throw new Error(
             result.detail ||
+            result.message ||
             "Unable to get an answer."
         );
 
@@ -2864,261 +3371,6 @@ async function askQuestion(
 
 
     return result;
-
-}
-
-
-// =========================================================
-// ASK - MAIN RESULT
-// =========================================================
-
-function addAskResult(
-    question,
-    answer,
-    sources = []
-) {
-
-    if (!askResults) {
-
-        return;
-
-    }
-
-
-    const result =
-        document.createElement(
-            "div"
-        );
-
-
-    result.className =
-        "ask-result";
-
-
-    let sourcesHtml =
-        "";
-
-
-    if (
-        Array.isArray(sources) &&
-        sources.length > 0
-    ) {
-
-        sourcesHtml = `
-
-            <div class="ask-result-sources">
-
-                <div class="ask-result-sources-title">
-
-                    Sources
-
-                </div>
-
-
-                ${sources.map(
-                    source => `
-
-                        <div class="ask-result-source">
-
-                            📄
-                            ${escapeHtml(
-                                source
-                            )}
-
-                        </div>
-
-                    `
-                ).join("")}
-
-
-            </div>
-
-        `;
-
-    }
-
-
-    result.innerHTML = `
-
-        <div class="ask-result-question">
-
-            ${escapeHtml(
-                question
-            )}
-
-        </div>
-
-
-        <div class="ask-result-answer">
-
-            <div class="ask-result-answer-label">
-
-                AI Assistant
-
-            </div>
-
-
-            <div class="ask-answer-text">
-
-                ${escapeHtml(
-                    answer
-                )}
-
-            </div>
-
-
-            ${sourcesHtml}
-
-        </div>
-
-    `;
-
-
-    askResults.appendChild(
-        result
-    );
-
-
-    askResults.scrollTop =
-        askResults.scrollHeight;
-
-}
-
-
-// =========================================================
-// CLEAR ASK HISTORY
-// =========================================================
-
-function clearAskHistory() {
-
-    console.log(
-        "Clearing Ask history"
-    );
-
-
-    // ==========================================
-    // CLEAR MAIN ASK RESULTS
-    // ==========================================
-
-    if (askResults) {
-
-        askResults.innerHTML =
-            "";
-
-    }
-
-
-    // ==========================================
-    // CLEAR RIGHT AI ASSISTANT CHAT
-    // ==========================================
-
-    const chatMessages =
-        document.getElementById(
-            "chatMessages"
-        );
-
-
-    if (chatMessages) {
-
-        chatMessages.innerHTML = `
-
-            <div class="message assistant-message">
-
-                <div class="message-avatar">
-
-                    ✦
-
-                </div>
-
-
-                <div>
-
-                    <div class="message-bubble">
-
-                        Hello! I'm ready to answer
-                        questions about your knowledge base.
-
-                    </div>
-
-
-                    <span class="message-time">
-
-                        Just now
-
-                    </span>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    // ==========================================
-    // CLEAR QUESTION INPUT
-    // ==========================================
-
-    if (questionInput) {
-
-        questionInput.value =
-            "";
-
-    }
-
-
-    // ==========================================
-    // CLEAR CHAT INPUT
-    // ==========================================
-
-    const chatInput =
-        document.getElementById(
-            "chatInput"
-        );
-
-
-    if (chatInput) {
-
-        chatInput.value =
-            "";
-
-    }
-
-
-    if (questionInput) {
-
-        questionInput.focus();
-
-    }
-
-}
-
-
-// =========================================================
-// CLEAR BUTTON
-// =========================================================
-
-if (clearAskButton) {
-
-    clearAskButton.addEventListener(
-        "click",
-        clearAskHistory
-    );
-
-}
-
-
-// =========================================================
-// NEW CONVERSATION BUTTON
-// =========================================================
-
-if (newConversationButton) {
-
-    newConversationButton.addEventListener(
-        "click",
-        clearAskHistory
-    );
 
 }
 
@@ -3142,13 +3394,15 @@ async function handleAsk() {
 
     if (!question) {
 
+        questionInput.focus();
+
         return;
 
     }
 
 
     // ==========================================
-    // ADD USER QUESTION TO RIGHT SIDEBAR
+    // ADD USER QUESTION
     // ==========================================
 
     addUserMessage(
@@ -3163,9 +3417,12 @@ async function handleAsk() {
     questionInput.value =
         "";
 
+    questionInput.style.height =
+        "auto";
+
 
     // ==========================================
-    // DISABLE BUTTON
+    // DISABLE SEND BUTTON
     // ==========================================
 
     if (askButton) {
@@ -3191,10 +3448,6 @@ async function handleAsk() {
         );
 
 
-        // ======================================
-        // CALL RAG API
-        // ======================================
-
         const result =
             await askQuestion(
                 question
@@ -3207,32 +3460,71 @@ async function handleAsk() {
         );
 
 
-        // ======================================
-        // REMOVE LOADING
-        // ======================================
-
         removeLoadingMessage();
 
 
         // ======================================
-        // MAIN ASK SECTION
+        // EXTRACT ANSWER
         // ======================================
 
-        addAskResult(
-            question,
-            result.answer,
-            result.sources || []
-        );
+        const answer =
+            result.answer ||
+            result.response ||
+            result.message ||
+            "No answer was returned.";
 
 
         // ======================================
-        // RIGHT AI ASSISTANT SIDEBAR
+        // EXTRACT SOURCES
+        // ======================================
+
+        const sources =
+            result.sources ||
+            result.context ||
+            [];
+
+
+        // ======================================
+        // MAIN DYNAMIC ANSWER
         // ======================================
 
         addAssistantMessage(
-            result.answer,
-            result.sources || []
+            answer,
+            sources
         );
+
+
+        // ======================================
+        // LEGACY CONTAINER
+        // ======================================
+
+        if (answerContainer) {
+
+            answerContainer.classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        if (answerElement) {
+
+            answerElement.innerText =
+                answer;
+
+        }
+
+
+        if (sourcesElement) {
+
+            sourcesElement.innerHTML =
+                createSourcesHtml(
+                    normalizeSources(
+                        sources
+                    )
+                );
+
+        }
 
 
     } catch (error) {
@@ -3246,25 +3538,10 @@ async function handleAsk() {
         removeLoadingMessage();
 
 
-        // ======================================
-        // SHOW ERROR IN MAIN ASK SECTION
-        // ======================================
-
-        addAskResult(
-            question,
+        addAssistantMessage(
             error.message ||
             "Sorry, I couldn't process your question. Please try again.",
             []
-        );
-
-
-        // ======================================
-        // SHOW ERROR IN SIDEBAR
-        // ======================================
-
-        addAssistantMessage(
-            error.message ||
-            "Sorry, I couldn't process your question. Please try again."
         );
 
 
@@ -3278,7 +3555,11 @@ async function handleAsk() {
         }
 
 
-        questionInput.focus();
+        if (questionInput) {
+
+            questionInput.focus();
+
+        }
 
     }
 
@@ -3300,10 +3581,42 @@ if (askButton) {
 
 
 // =========================================================
-// ASK ENTER KEY
+// AUTO RESIZE QUESTION INPUT
+// =========================================================
+
+function autoResizeQuestionInput() {
+
+    if (!questionInput) {
+
+        return;
+
+    }
+
+
+    questionInput.style.height =
+        "auto";
+
+
+    questionInput.style.height =
+        Math.min(
+            questionInput.scrollHeight,
+            160
+        ) + "px";
+
+}
+
+
+// =========================================================
+// QUESTION INPUT
 // =========================================================
 
 if (questionInput) {
+
+    questionInput.addEventListener(
+        "input",
+        autoResizeQuestionInput
+    );
+
 
     questionInput.addEventListener(
         "keydown",
@@ -3316,7 +3629,14 @@ if (questionInput) {
 
                 event.preventDefault();
 
-                handleAsk();
+
+                if (
+                    !askButton.disabled
+                ) {
+
+                    handleAsk();
+
+                }
 
             }
 
@@ -3327,17 +3647,952 @@ if (questionInput) {
 
 
 // =========================================================
-// RESTORE SESSION
+// CHAT INPUT COMPATIBILITY
 // =========================================================
 
-if (
-    getToken()
+const chatInput =
+    document.getElementById(
+        "chatInput"
+    );
+
+const chatSendButton =
+    document.getElementById(
+        "chatSendButton"
+    );
+
+
+if (chatSendButton) {
+
+    chatSendButton.addEventListener(
+        "click",
+        () => {
+
+            if (!chatInput) {
+
+                return;
+
+            }
+
+
+            const value =
+                chatInput.value.trim();
+
+
+            if (!value) {
+
+                return;
+
+            }
+
+
+            if (questionInput) {
+
+                questionInput.value =
+                    value;
+
+                autoResizeQuestionInput();
+
+            }
+
+
+            chatInput.value =
+                "";
+
+
+            handleAsk();
+
+        }
+    );
+
+}
+// =========================================================
+// ASSISTANT OVERVIEW
+// =========================================================
+
+async function loadAssistantOverview() {
+
+    const token =
+        getToken();
+
+
+    if (!token) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/documents",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        if (
+            response.status === 401
+        ) {
+
+            logout();
+
+            return;
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load knowledge base information."
+            );
+
+        }
+
+
+        const documents =
+            await response.json();
+
+
+        const documentArray =
+            Array.isArray(
+                documents
+            )
+                ? documents
+                : [];
+
+
+        updateAssistantOverview(
+            documentArray
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Assistant overview error:",
+            error
+        );
+
+
+        if (assistantDocumentCount) {
+
+            assistantDocumentCount.innerText =
+                "Unavailable";
+
+        }
+
+
+        if (assistantChunkCount) {
+
+            assistantChunkCount.innerText =
+                "—";
+
+        }
+
+
+        if (assistantLastUpdated) {
+
+            assistantLastUpdated.innerText =
+                "—";
+
+        }
+
+    }
+
+}
+
+
+// =========================================================
+// UPDATE ASSISTANT OVERVIEW
+// =========================================================
+
+function updateAssistantOverview(
+    documents
 ) {
+
+    if (!Array.isArray(documents)) {
+
+        documents = [];
+
+    }
+
+
+    // =====================================================
+    // DOCUMENT COUNT
+    // =====================================================
+
+    if (assistantDocumentCount) {
+
+        assistantDocumentCount.innerText =
+            documents.length === 0
+                ? "No documents"
+                : `${documents.length} indexed`;
+
+    }
+
+
+    // =====================================================
+    // TOTAL CHUNKS
+    // =====================================================
+
+    const totalChunks =
+        documents.reduce(
+            (
+                total,
+                document
+            ) => {
+
+                return (
+                    total +
+                    Number(
+                        document.chunk_count ||
+                        0
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    if (assistantChunkCount) {
+
+        assistantChunkCount.innerText =
+            totalChunks.toLocaleString();
+
+    }
+
+
+    // =====================================================
+    // LAST UPDATED
+    // =====================================================
+
+    let latestDate =
+        null;
+
+
+    documents.forEach(
+        document => {
+
+            const dateValue =
+                document.updated_at ||
+                document.created_at;
+
+
+            if (!dateValue) {
+
+                return;
+
+            }
+
+
+            const date =
+                new Date(
+                    dateValue
+                );
+
+
+            if (
+                !latestDate ||
+                date > latestDate
+            ) {
+
+                latestDate =
+                    date;
+
+            }
+
+        }
+    );
+
+
+    if (assistantLastUpdated) {
+
+        assistantLastUpdated.innerText =
+            latestDate
+                ? formatDate(
+                    latestDate
+                )
+                : "—";
+
+    }
+
+
+    // =====================================================
+    // CATEGORY COUNTS
+    // =====================================================
+
+    const categoryCounts = {
+
+        salesforce: 0,
+
+        non_sf: 0,
+
+        telecom: 0
+
+    };
+
+
+    documents.forEach(
+        document => {
+
+            const category =
+                String(
+                    document.category ||
+                    ""
+                )
+                .toLowerCase()
+                .replace(
+                    /-/g,
+                    "_"
+                );
+
+
+            if (
+                category ===
+                "salesforce"
+            ) {
+
+                categoryCounts.salesforce++;
+
+            }
+
+
+            else if (
+                category ===
+                "non_sf" ||
+                category ===
+                "nonsf" ||
+                category ===
+                "non_sforce"
+            ) {
+
+                categoryCounts.non_sf++;
+
+            }
+
+
+            else if (
+                category ===
+                "telecom"
+            ) {
+
+                categoryCounts.telecom++;
+
+            }
+
+        }
+    );
+
+
+    updateAssistantDomainCounts(
+        categoryCounts
+    );
+
+}
+
+
+// =========================================================
+// UPDATE ASSISTANT DOMAIN COUNTS
+// =========================================================
+
+function updateAssistantDomainCounts(
+    counts
+) {
+
+    if (!assistantDomainList) {
+
+        return;
+
+    }
+
+
+    const domainRows =
+        assistantDomainList.querySelectorAll(
+            ".domain-row"
+        );
+
+
+    domainRows.forEach(
+        row => {
+
+            const strong =
+                row.querySelector(
+                    "strong"
+                );
+
+
+            const span =
+                row.querySelector(
+                    "span"
+                );
+
+
+            if (!strong || !span) {
+
+                return;
+
+            }
+
+
+            const name =
+                strong.innerText
+                    .toLowerCase();
+
+
+            let count =
+                0;
+
+
+            if (
+                name.includes(
+                    "salesforce"
+                )
+            ) {
+
+                count =
+                    counts.salesforce;
+
+            }
+
+
+            else if (
+                name.includes(
+                    "non-sf"
+                )
+            ) {
+
+                count =
+                    counts.non_sf;
+
+            }
+
+
+            else if (
+                name.includes(
+                    "telecom"
+                )
+            ) {
+
+                count =
+                    counts.telecom;
+
+            }
+
+
+            span.innerText =
+                `${count} document${
+                    count === 1
+                        ? ""
+                        : "s"
+                }`;
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// DOCUMENT LIST INITIALIZATION
+// =========================================================
+
+async function initializeDocuments() {
+
+    if (
+        getRole() !== "admin"
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        await loadAllDocuments();
+
+    } catch (error) {
+
+        console.error(
+            "Document initialization failed:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// DRAG & DROP UPLOAD
+// =========================================================
+
+const uploadCard =
+    document.querySelector(
+        ".upload-card"
+    );
+
+
+if (uploadCard) {
+
+    [
+        "dragenter",
+        "dragover"
+    ].forEach(
+        eventName => {
+
+            uploadCard.addEventListener(
+                eventName,
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    uploadCard.classList.add(
+                        "drag-active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    [
+        "dragleave",
+        "drop"
+    ].forEach(
+        eventName => {
+
+            uploadCard.addEventListener(
+                eventName,
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+
+                    uploadCard.classList.remove(
+                        "drag-active"
+                    );
+
+                }
+            );
+
+        }
+    );
+
+
+    uploadCard.addEventListener(
+        "drop",
+        event => {
+
+            if (
+                getRole() !== "admin"
+            ) {
+
+                return;
+
+            }
+
+
+            const files =
+                Array.from(
+                    event.dataTransfer.files
+                );
+
+
+            const pdfFiles =
+                files.filter(
+                    file =>
+                        file.name
+                            .toLowerCase()
+                            .endsWith(
+                                ".pdf"
+                            )
+                );
+
+
+            if (
+                pdfFiles.length === 0
+            ) {
+
+                alert(
+                    "Please drop PDF files only."
+                );
+
+                return;
+
+            }
+
+
+            if (fileInput) {
+
+                const dataTransfer =
+                    new DataTransfer();
+
+
+                pdfFiles.forEach(
+                    file => {
+
+                        dataTransfer.items.add(
+                            file
+                        );
+
+                    }
+                );
+
+
+                fileInput.files =
+                    dataTransfer.files;
+
+
+                fileInput.dispatchEvent(
+                    new Event(
+                        "change",
+                        {
+                            bubbles:
+                                true
+                        }
+                    )
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// UPLOAD CARD CLICK
+// =========================================================
+
+if (uploadCard) {
+
+    uploadCard.addEventListener(
+        "click",
+        event => {
+
+            // Do not open picker when clicking
+            // an actual button/select/input.
+
+            if (
+                event.target.closest(
+                    "button"
+                ) ||
+                event.target.closest(
+                    "select"
+                ) ||
+                event.target.closest(
+                    "input"
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            openFilePicker();
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// DOCUMENT CATEGORY
+// =========================================================
+
+if (documentCategory) {
+
+    documentCategory.addEventListener(
+        "change",
+        event => {
+
+            console.log(
+                "Document category:",
+                event.target.value
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// NAVIGATION INITIALIZATION
+// =========================================================
+
+function initializeNavigation() {
+
+    console.log(
+        "Initializing navigation..."
+    );
+
+
+    if (
+        getRole() === "admin"
+    ) {
+
+        activateNav(
+            homeNav
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// INITIAL APP LOAD
+// =========================================================
+
+function initializeApp() {
+
+    console.log(
+        "Initializing RAG application..."
+    );
+
+
+    const token =
+        getToken();
+
+
+    if (!token) {
+
+        showLogin();
+
+        return;
+
+    }
+
 
     showApp();
 
-} else {
 
-    showLogin();
+    initializeNavigation();
+
+
+    // Load admin documents
+    if (
+        getRole() === "admin"
+    ) {
+
+        loadAllDocuments();
+
+    }
+
+
+    // Load knowledge-base statistics
+    loadAssistantOverview();
 
 }
+
+
+// =========================================================
+// AUTH TOKEN CHECK
+// =========================================================
+
+async function verifyAuthentication() {
+
+    const token =
+        getToken();
+
+
+    if (!token) {
+
+        showLogin();
+
+        return false;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/auth/me",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        if (
+            response.status === 401
+        ) {
+
+            logout();
+
+            return false;
+
+        }
+
+
+        if (
+            response.ok
+        ) {
+
+            const user =
+                await response.json();
+
+
+            if (
+                user.username
+            ) {
+
+                localStorage.setItem(
+                    "username",
+                    user.username
+                );
+
+            }
+
+
+            if (
+                user.role
+            ) {
+
+                localStorage.setItem(
+                    "role",
+                    user.role
+                );
+
+            }
+
+
+            return true;
+
+        }
+
+
+        return true;
+
+    } catch (error) {
+
+        /*
+         * If the backend does not expose /auth/me,
+         * keep the existing local authentication
+         * state instead of preventing the application
+         * from loading.
+         */
+
+        console.warn(
+            "Authentication verification unavailable:",
+            error
+        );
+
+
+        return true;
+
+    }
+
+}
+
+
+// =========================================================
+// KEYBOARD SHORTCUTS
+// =========================================================
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        // Escape clears current input
+
+        if (
+            event.key === "Escape"
+        ) {
+
+            if (
+                questionInput &&
+                document.activeElement ===
+                    questionInput
+            ) {
+
+                questionInput.value =
+                    "";
+
+                autoResizeQuestionInput();
+
+            }
+
+        }
+
+    }
+);
+
+
+// =========================================================
+// WINDOW VISIBILITY
+// =========================================================
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if (
+            !document.hidden &&
+            getToken()
+        ) {
+
+            loadAssistantOverview();
+
+        }
+
+    }
+);
+
+
+// =========================================================
+// START APPLICATION
+// =========================================================
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        console.log(
+            "DOM loaded."
+        );
+
+
+        const authenticated =
+            await verifyAuthentication();
+
+
+        if (
+            authenticated
+        ) {
+
+            initializeApp();
+
+        }
+
+    }
+);
