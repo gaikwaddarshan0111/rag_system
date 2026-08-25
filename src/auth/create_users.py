@@ -73,5 +73,17 @@ if __name__ == "__main__":
         "agent123",
         "agent"
     )
+    create_user(
+        "prasad",
+        "agent123",
+        "agent"
+    )
+    create_user(
+        "tanzeem",
+        "agent123",
+        "admin"
+    )
+
+
 
     db.close()

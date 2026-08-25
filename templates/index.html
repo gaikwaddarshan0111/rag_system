@@ -2,170 +2,435 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>RAG System</title>
 
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+    >
+
 </head>
+
 
 <body>
 
-<div class="app">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
+<!-- =========================================================
+     LOGIN SCREEN
+========================================================= -->
 
-        <div class="brand">
-            <div class="brand-icon">✦</div>
-            <span>RAG System </span>
+<div
+    id="loginScreen"
+    class="login-screen"
+>
+
+
+    <div class="login-card">
+
+
+        <div class="login-logo">
+            ✦
         </div>
 
-        <div class="profile">
-            <div class="avatar">D</div>
 
-            <div class="profile-info">
-                <strong>Darshan</strong>
-                <span>Workspace</span>
+        <h1>
+            RAG System
+        </h1>
+
+
+        <p>
+            Sign in to access your knowledge base.
+        </p>
+
+
+        <form id="loginForm">
+
+
+            <div class="login-field">
+
+
+                <label for="username">
+                    Username
+                </label>
+
+
+                <input
+                    type="text"
+                    id="username"
+                    placeholder="Enter username"
+                    autocomplete="username"
+                    required
+                >
+
+
             </div>
 
-            <span class="chevron">⌄</span>
+
+            <div class="login-field">
+
+
+                <label for="password">
+                    Password
+                </label>
+
+
+                <input
+                    type="password"
+                    id="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                >
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+                id="loginButton"
+            >
+                Sign In
+            </button>
+
+
+            <div
+                id="loginError"
+                class="login-error hidden"
+            ></div>
+
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div
+    class="app hidden"
+    id="app"
+>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+
+            <div class="brand-icon">
+                ✦
+            </div>
+
+
+            <span>
+                RAG System
+            </span>
+
+
         </div>
 
 
+
+        <!-- PROFILE -->
+
+        <div class="profile">
+
+
+            <div
+                class="avatar"
+                id="userAvatar"
+            >
+                D
+            </div>
+
+
+            <div class="profile-info">
+
+
+                <strong id="loggedInUsername">
+                    User
+                </strong>
+
+
+                <span id="loggedInRole">
+                    Agent
+                </span>
+
+
+            </div>
+
+
+            <button
+                class="logout-button"
+                id="logoutButton"
+                title="Logout"
+                type="button"
+            >
+                Logout
+            </button>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             WORKSPACE
+        ================================================== -->
+
         <div class="sidebar-section">
+
 
             <div class="section-title">
                 WORKSPACE
             </div>
 
-            <button class="sidebar-item active">
-                <span>⌂</span>
+
+            <!-- HOME -->
+
+            <button
+                id="homeNav"
+                class="sidebar-item active"
+                type="button"
+            >
+
+                <span>
+                    ⌂
+                </span>
+
                 Home
+
             </button>
 
-            <button class="sidebar-item">
-                <span>♙</span>
+
+
+            <!-- TEAM - ADMIN ONLY -->
+
+            <button
+                id="teamsNav"
+                class="sidebar-item admin-only"
+                type="button"
+            >
+
+                <span>
+                    ♙
+                </span>
+
                 Team
+
             </button>
+
 
         </div>
 
 
-        <div class="sidebar-section">
+
+        <!-- =================================================
+             KNOWLEDGE
+             ADMIN ONLY
+        ================================================== -->
+
+        <div class="sidebar-section admin-only">
+
 
             <div class="section-title">
                 KNOWLEDGE
             </div>
 
-            <button class="sidebar-item">
-                <span>▱</span>
+
+            <!-- DOCUMENTS -->
+
+            <button
+                id="documentsNav"
+                class="sidebar-item"
+                type="button"
+            >
+
+                <span>
+                    ▱
+                </span>
+
                 Documents
+
             </button>
 
-            <button class="sidebar-item">
-                <span>▦</span>
-                Collections
-            </button>
 
         </div>
 
 
-        <div class="sidebar-section">
 
-            <div class="section-title">
-                TAGS
-            </div>
-
-            <div class="tag">
-                <span class="dot blue"></span>
-                Urgent
-            </div>
-
-            <div class="tag">
-                <span class="dot gray"></span>
-                Reviewed
-            </div>
-
-        </div>
-
+        <!-- =================================================
+             SETTINGS
+        ================================================== -->
 
         <div class="sidebar-bottom">
 
-            <button class="sidebar-item">
-                <span>⚙</span>
+
+            <button
+                class="sidebar-item"
+                type="button"
+            >
+
+                <span>
+                    ⚙
+                </span>
+
                 Settings
+
             </button>
 
+
         </div>
+
 
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <main class="main-content">
+
+
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
 
         <div class="topbar">
 
+
             <div>
-                <h1>Knowledge Base</h1>
+
+
+                <h1>
+                    Knowledge Base
+                </h1>
+
 
                 <p>
                     Upload documents and build your RAG knowledge base.
                 </p>
+
+
             </div>
 
+
+            <!-- ADMIN ONLY -->
+
             <button
-                class="add-button"
-                id="addDocumentButton">
+                class="add-button admin-only"
+                id="addDocumentButton"
+                type="button"
+            >
                 + Add New
             </button>
 
+
         </div>
 
 
-        <!-- TRAIN / ASK TABS -->
+
+        <!-- =================================================
+             TRAIN / ASK TABS
+        ================================================== -->
 
         <div class="mode-tabs">
 
+
+            <!-- TRAIN - ADMIN ONLY -->
+
             <button
-                class="mode-tab active"
-                data-mode="train">
+                class="mode-tab active admin-only"
+                data-mode="train"
+                id="trainTab"
+                type="button"
+            >
                 Train
             </button>
 
+
+            <!-- ASK - EVERY AUTHENTICATED USER -->
+
             <button
                 class="mode-tab"
-                data-mode="ask">
+                data-mode="ask"
+                id="askTab"
+                type="button"
+            >
                 Ask
             </button>
-            
+
 
         </div>
 
 
-        <!-- TRAIN -->
+
+        <!-- =================================================
+             TRAIN MODE
+             ADMIN ONLY
+        ================================================== -->
 
         <section
             id="trainMode"
-            class="mode-content active">
+            class="mode-content active admin-only"
+        >
+
+
+            <!-- =================================================
+                 UPLOAD CARD
+            ================================================== -->
 
             <div class="upload-card">
+
 
                 <div class="upload-icon">
                     ↑
                 </div>
 
-                <h2>Upload Knowledge</h2>
+
+                <h2>
+                    Upload Knowledge
+                </h2>
+
 
                 <p>
                     Click to upload or drag and drop
                 </p>
 
+
                 <span>
                     PDF (max. 10MB)
                 </span>
+
+
+
+                <!-- FILE INPUT -->
 
                 <input
                     type="file"
@@ -175,210 +440,478 @@
                     hidden
                 >
 
+
+
+                <!-- CATEGORY -->
+
+                <div class="category-selector">
+
+
+                    <label for="documentCategory">
+                        Knowledge Category
+                    </label>
+
+
+                    <select
+                        id="documentCategory"
+                    >
+
+                        <option value="salesforce">
+                            Salesforce (SF)
+                        </option>
+
+
+                        <option value="non_sf">
+                            Non-SF
+                        </option>
+
+
+                        <option value="telecom">
+                            Telecom
+                        </option>
+
+
+                    </select>
+
+
+                </div>
+
+
+
+                <!-- CHOOSE FILE -->
+
                 <button
                     id="chooseFileButton"
-                    class="upload-button">
+                    class="upload-button"
+                    type="button"
+                >
                     Choose Files
                 </button>
 
+
+
+                <!-- BUILD -->
+
                 <button
-                    id ="trainButton"
-                    class="build-button">
+                    id="trainButton"
+                    class="build-button"
+                    type="button"
+                >
                     Build Knowledge Base
                 </button>
+
 
             </div>
 
 
+
+            <!-- =================================================
+                 DOCUMENT HEADER
+            ================================================== -->
+
             <div class="documents-header">
 
+
                 <div>
-                    <span class="breadcrumb">Home</span>
-                    <span class="separator">›</span>
-                    <strong>Knowledge Base</strong>
+
+
+                    <span class="breadcrumb">
+                        Home
+                    </span>
+
+
+                    <span class="separator">
+                        ›
+                    </span>
+
+
+                    <strong>
+                        Knowledge Base
+                    </strong>
+
+
                 </div>
+
 
                 <span id="documentCount">
                     0 documents
                 </span>
 
+
             </div>
 
 
+
+            <!-- =================================================
+                 DOCUMENT LIST HEADER
+            ================================================== -->
+
+            <div class="knowledge-documents-header">
+
+
+                <div class="knowledge-documents-title">
+                    Knowledge Base
+                </div>
+
+
+                <div
+                    id="documentCountSecondary"
+                    class="knowledge-documents-count"
+                >
+                    0 documents
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 DOCUMENT LIST
+            ================================================== -->
+
             <div
                 id="documentList"
-                class="document-list">
+                class="document-list"
+            >
+
 
                 <div class="empty-state">
 
-                    <div>📄</div>
+
+                    <div>
+                        📄
+                    </div>
+
 
                     <p>
-                        No documents indexed yet.
+                        Loading documents.
                     </p>
+
 
                     <span>
                         Upload a document to get started.
                     </span>
 
+
                 </div>
 
+
             </div>
+
 
         </section>
 
 
-        <!-- ASK -->
+
+        <!-- =================================================
+             ASK MODE
+             ADMIN + AGENT
+        ================================================== -->
 
         <section
             id="askMode"
-            class="mode-content">
+            class="mode-content"
+        >
+
 
             <div class="ask-page">
 
+
+                <!-- =================================================
+                     ASK HEADER
+                ================================================== -->
+
                 <div class="ask-header">
+
 
                     <div class="ask-icon">
                         ✦
                     </div>
 
+
                     <h2>
                         Ask your knowledge base
                     </h2>
+
 
                     <p>
                         Ask questions about your uploaded documents.
                     </p>
 
+
                 </div>
 
+
+
+                <!-- =================================================
+                     ASK TOOLBAR
+                ================================================== -->
+
+                <div class="ask-toolbar">
+
+
+                    <div></div>
+
+
+                    <button
+                        id="clearAskButton"
+                        class="clear-button"
+                        type="button"
+                    >
+                        Clear
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- =================================================
+                     ASK RESULTS / SEARCH HISTORY
+                ================================================== -->
+
+                <div
+                    id="askResults"
+                    class="ask-results"
+                >
+                </div>
+
+
+
+                <!-- =================================================
+                     QUESTION BOX
+                ================================================== -->
 
                 <div class="question-container">
 
+
                     <textarea
                         id="questionInput"
-                        placeholder="Ask a question about your documents..."></textarea>
+                        placeholder="Ask a question about your documents..."
+                    ></textarea>
+
 
                     <button
                         id="askButton"
-                        class="send-button">
+                        class="send-button"
+                        type="button"
+                    >
                         ↑
                     </button>
+
 
                 </div>
 
 
+
+                <!-- =================================================
+                     LEGACY ANSWER CONTAINER
+                     KEPT FOR EXISTING JAVASCRIPT
+                ================================================== -->
+
                 <div
                     id="answerContainer"
-                    class="answer-container hidden">
+                    class="answer-container hidden"
+                    aria-hidden="true"
+                >
+
 
                     <div class="answer-label">
                         AI Assistant
                     </div>
 
-                    <div id="answer"></div>
+
+                    <div id="answer">
+                    </div>
+
 
                     <div
                         id="sources"
-                        class="sources">
+                        class="sources"
+                    >
                     </div>
+
 
                 </div>
 
+
             </div>
 
+
         </section>
+
 
     </main>
 
 
-    <!-- AI ASSISTANT -->
+
+    <!-- =====================================================
+         AI ASSISTANT SIDEBAR
+    ====================================================== -->
 
     <aside class="assistant">
 
+
+        <!-- =================================================
+             ASSISTANT HEADER
+        ================================================== -->
+
         <div class="assistant-header">
 
+
             <div class="assistant-title">
+
 
                 <div class="assistant-avatar">
                     ✦
                 </div>
 
+
                 <div>
-                    <strong>AI Assistant</strong>
+
+
+                    <strong>
+                        AI Assistant
+                    </strong>
+
 
                     <div class="status">
+
+
                         <span></span>
+
+
                         RAG Active
+
+
                     </div>
+
+
                 </div>
+
 
             </div>
 
-            <button class="icon-button">
+
+
+            <!-- NEW / CLEAR CONVERSATION -->
+
+            <button
+                id="newConversationButton"
+                class="icon-button"
+                title="Clear conversation"
+                type="button"
+            >
                 +
             </button>
+
 
         </div>
 
 
+
+        <!-- =================================================
+             CHAT
+        ================================================== -->
+
         <div
             id="chatMessages"
-            class="chat-messages">
+            class="chat-messages"
+        >
+
+
+            <!-- INITIAL MESSAGE -->
 
             <div class="message assistant-message">
+
 
                 <div class="message-avatar">
                     ✦
                 </div>
 
+
                 <div>
 
+
                     <div class="message-bubble">
+
 
                         Hello! I'm ready to answer questions
                         about your knowledge base.
 
+
                     </div>
+
 
                     <span class="message-time">
                         Just now
                     </span>
 
+
                 </div>
+
 
             </div>
 
+
         </div>
 
+
+
+        <!-- =================================================
+             CHAT INPUT
+        ================================================== -->
 
         <div class="chat-input-container">
 
+
             <textarea
                 id="chatInput"
-                placeholder="Ask a question about your documents..."></textarea>
+                placeholder="Ask a question about your documents..."
+            ></textarea>
+
 
             <button
                 id="chatSendButton"
-                class="send-button">
+                class="send-button"
+                type="button"
+            >
                 ↑
             </button>
 
+
         </div>
 
+
+
+        <!-- =================================================
+             DISCLAIMER
+        ================================================== -->
 
         <div class="disclaimer">
 
-            AI can make mistakes. Verify important information.
+
+            AI can make mistakes.
+            Verify important information.
+
 
         </div>
 
+
     </aside>
+
 
 </div>
 
 
+
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script src="/static/js/app.js"></script>
+
 
 </body>
 
