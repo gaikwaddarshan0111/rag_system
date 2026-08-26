@@ -282,7 +282,8 @@ async def train_document(
         # =================================================
 
         result = index_document(
-            str(file_path)
+            str(file_path),
+            category
         )
 
 
@@ -388,6 +389,13 @@ async def train_document(
 
         db.close()
 
+@app.get("/health")
+async def health_check():
+
+    return{
+        "status": "healthy",
+        "service": "RAG SYSTEM"
+    }
 
 # =========================================================
 # ROUTERS

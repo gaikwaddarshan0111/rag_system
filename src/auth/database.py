@@ -1,4 +1,7 @@
+import os
+from src.config import DATABASE_URL
 from pathlib import Path
+
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
@@ -15,10 +18,7 @@ DATA_DIR.mkdir(
     exist_ok=True
 )
 
-DATABASE_URL = (
-    f"sqlite:///{DATA_DIR / 'app.db'}"
 
-)
 
 # =====================================
 # ENGINE

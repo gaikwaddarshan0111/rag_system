@@ -1,8 +1,33 @@
+import os
+from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# ===================
+# LOAD ENV
+# ===================
+
+load_dotenv()
 
 
+# ======================
+# HUGGING FACE
+# ======================
+
+HF_TOKEN = os.getenv(
+    "HF_TOKEN"
+)
+
+# =======================
+# EMBEDDING MODEL
+# =======================
+
+model = SentenceTransformer("all-MiniLM-L6-v2", token=HF_TOKEN)
+
+
+# =======================
+# CREATE EMBEDDING
+# =======================
 def create_embeddings(texts: list[str]):
     embeddings = model.encode(texts)
 

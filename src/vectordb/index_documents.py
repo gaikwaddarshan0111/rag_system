@@ -6,7 +6,7 @@ from src.embeddings.embedder import create_embeddings
 from src.vectordb.chroma_store import add_documnets
 
 
-def index_document(file_path: str):
+def index_document(file_path: str, category: str):
     print(f"\nReading document: {file_path}")
 
     # ==================
@@ -54,7 +54,8 @@ def index_document(file_path: str):
     chunk_count = add_documnets(
         chunks,
         embeddings,
-        source
+        source,
+        category
     )
 
     print(
@@ -68,6 +69,6 @@ def index_document(file_path: str):
 
 if __name__ == "__main__":
 
-    result = index_document("data/company_policy.pdf")
+    result = index_document("data/company_policy.pdf", "Salesforce")
 
     print(result)

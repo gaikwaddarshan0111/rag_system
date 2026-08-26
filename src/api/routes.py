@@ -15,6 +15,7 @@ router = APIRouter()
 
 class AskRequest(BaseModel):
     question: str
+    category: str
 
 
 class AskResponse(BaseModel):
@@ -26,6 +27,20 @@ class AskResponse(BaseModel):
 def ask_question(request: AskRequest, current_user=Depends(get_current_user)):
 
     question = request.question.strip()
+    category = request.category.strip().lower()
+
+    allowed_categories = {
+        "salesforce",
+        "non_sf",
+        "telecom"
+    }
+
+    if category not in allowed_categories:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid category."
+        )
 
     if not question:
         raise HTTPException(
@@ -37,6 +52,7 @@ def ask_question(request: AskRequest, current_user=Depends(get_current_user)):
 
         print("\n================ ASK REQUEST ================")
         print(f"Question: {question}")
+        print(f"Category: {category}")
 
         # =========================
         # RETRIEVAL
@@ -44,7 +60,7 @@ def ask_question(request: AskRequest, current_user=Depends(get_current_user)):
 
         print("\n[1] Retrieving documents...")
 
-        results = retrieve_documents(question)
+        results = retrieve_documents(question, category=category)
 
         print(f"Retrieved {len(results)} documents")
 

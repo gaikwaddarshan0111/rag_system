@@ -4,6 +4,7 @@ from src.vectordb.chroma_store import collection
 
 def retrieve_documents(
         question: str,
+        category: str | None = None,
         top_k: int = 3
 ):
 
@@ -12,13 +13,32 @@ def retrieve_documents(
         [question]
     )[0]
 
+
+    # ===================================
+    # BUILD CHROMA QUERY
+    # ===================================
+
+    query_kwargs = {
+        "query_embeddings": [
+            question_embedding.tolist()
+        ],
+
+        "n_results": top_k
+    }
+
+
+    # ==============================
+    # CATEGORY FILTER
+    # ==============================
+    if category:
+        query_kwargs["where"] = {
+            "category": category
+        }
     # Search ChromaDB
 
     results = collection.query(
-        query_embeddings=[
-            question_embedding.tolist()
-        ],
-        n_results=top_k
+        **query_kwargs
+        
     )
 
     documents = results.get(

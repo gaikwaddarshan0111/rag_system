@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from src.auth.dependencies import get_current_user
 from sqlalchemy.orm import Session
 
 from src.auth.database import get_db
@@ -73,6 +74,7 @@ def login(
         )
 
 
+
     # ==========================================
     # CREATE JWT
     # ==========================================
@@ -89,3 +91,12 @@ def login(
         username=user.username,
         role=user.role
     )
+
+@router.get("/me")
+def get_me(
+    current_user=Depends(get_current_user)
+):
+    return{
+        "username": current_user["username"],
+        "role": current_user["role"]
+    }
