@@ -2,15 +2,26 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>RAG System</title>
 
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link
+        rel="stylesheet"
+        href="/static/css/style.css"
+    >
+
 </head>
 
+
 <body>
+
 
 <!-- =========================================================
      LOGIN SCREEN
@@ -18,78 +29,287 @@
 
 <div id="loginScreen" class="login-screen">
 
-    <div class="login-card">
 
-        <div class="login-logo">✦</div>
+    <!-- =====================================================
+         LEFT LOGIN PANEL
+    ====================================================== -->
 
-        <h1>RAG System</h1>
+    <div class="login-panel">
 
-        <p>
-            Sign in to access your knowledge base.
-        </p>
-
-        <form id="loginForm">
-
-            <div class="login-field">
-
-                <label for="username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    placeholder="Enter username"
-                    autocomplete="username"
-                    required
-                >
-
-            </div>
+        <div class="login-content">
 
 
-            <div class="login-field">
+            <!-- BRAND -->
 
-                <label for="password">
-                    Password
-                </label>
+            <div class="login-brand">
 
-                <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter password"
-                    autocomplete="current-password"
-                    required
-                >
+                <div class="login-logo">
+                    ✦
+                </div>
+
+
+                <div class="login-brand-name">
+
+                    <span class="login-title-accent">
+                        RAG
+                    </span>
+
+                    <span class="login-title-white">
+                        System
+                    </span>
+
+                </div>
 
             </div>
 
 
-            <button
-                type="submit"
-                class="login-button"
-                id="loginButton"
+            <!-- HEADING -->
+
+            <div class="login-heading">
+
+                <h1>
+                    Welcome back
+                </h1>
+
+
+                <p class="login-subtitle">
+                    Sign in to access your knowledge base.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
+            <form
+                id="loginForm"
+                class="login-form"
             >
-                Sign In
-            </button>
 
 
-            <div
-                id="loginError"
-                class="login-error hidden"
-            ></div>
+                <!-- USERNAME -->
 
-        </form>
+                <div class="login-field">
+
+                    <label for="username">
+                        Username
+                    </label>
+
+
+                    <div class="login-input-wrapper">
+
+                        <span
+                            class="login-input-icon"
+                            aria-hidden="true"
+                        >
+                            👤
+                        </span>
+
+
+                        <input
+                            type="text"
+                            id="username"
+                            placeholder="Enter username"
+                            autocomplete="username"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="login-field">
+
+                    <label for="password">
+                        Password
+                    </label>
+
+
+                    <div class="login-input-wrapper">
+
+                        <span
+                            class="login-input-icon"
+                            aria-hidden="true"
+                        >
+                            🔒
+                        </span>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                    id="loginButton"
+                >
+
+                    <span class="login-button-text">
+                        Log In
+                    </span>
+
+
+                    <span
+                        class="login-button-arrow"
+                        aria-hidden="true"
+                    >
+                        →
+                    </span>
+
+                </button>
+
+
+                <!-- LOGIN ERROR -->
+
+                <div
+                    id="loginError"
+                    class="login-error hidden"
+                    role="alert"
+                ></div>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 LOGIN FOOTER
+            ================================================== -->
+
+            <div class="login-footer">
+
+                <div class="login-footer-line"></div>
+
+
+                <div class="login-footer-text">
+
+                    Ask questions
+
+                    <span>
+                        •
+                    </span>
+
+                    Find answers
+
+                </div>
+
+
+                <div class="login-copyright">
+
+                    © 2026 Darshan Gaikwad.
+                    All rights reserved.
+
+                </div>
+
+            </div>
+
+
+        </div>
 
     </div>
 
+
+    <!-- =====================================================
+         RIGHT AI PANEL
+    ====================================================== -->
+
+    <div class="login-visual">
+
+
+        <img
+            src="/static/images/ai.png"
+            alt="AI Knowledge Assistant"
+            class="login-ai-image"
+        >
+
+
+        <div class="login-visual-shade"></div>
+
+
+        <div class="login-visual-content">
+
+
+            <div class="visual-badge">
+
+                <span>
+                    ✦
+                </span>
+
+            </div>
+
+
+            <div class="visual-eyebrow">
+
+                AI-POWERED KNOWLEDGE
+
+            </div>
+
+
+            <h2>
+
+                Your knowledge.<br>
+
+                <span>
+                    Your answers.
+                </span>
+
+            </h2>
+
+
+            <p>
+
+                Search your indexed documents
+                and get grounded answers with
+                relevant sources.
+
+            </p>
+
+
+            <div class="visual-status">
+
+                <span
+                    class="visual-status-dot"
+                ></span>
+
+                RAG retrieval active
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
 </div>
+
 
 
 <!-- =========================================================
      APPLICATION
 ========================================================= -->
 
-<div class="app hidden" id="app">
+<div
+    class="app hidden"
+    id="app"
+>
 
 
     <!-- =====================================================
@@ -107,6 +327,7 @@
                 ✦
             </div>
 
+
             <span>
                 RAG System
             </span>
@@ -117,6 +338,7 @@
         <!-- PROFILE -->
 
         <div class="profile">
+
 
             <div
                 class="avatar"
@@ -131,6 +353,7 @@
                 <strong id="loggedInUsername">
                     User
                 </strong>
+
 
                 <span id="loggedInRole">
                     Agent
@@ -147,6 +370,7 @@
                 Logout
             </button>
 
+
         </div>
 
 
@@ -155,6 +379,7 @@
         ================================================== -->
 
         <div class="sidebar-section">
+
 
             <div class="section-title">
                 WORKSPACE
@@ -190,6 +415,7 @@
 
             </button>
 
+
         </div>
 
 
@@ -199,6 +425,7 @@
         ================================================== -->
 
         <div class="sidebar-section admin-only">
+
 
             <div class="section-title">
                 KNOWLEDGE
@@ -219,6 +446,7 @@
 
             </button>
 
+
         </div>
 
 
@@ -227,6 +455,7 @@
         ================================================== -->
 
         <div class="sidebar-bottom">
+
 
             <button
                 class="sidebar-item"
@@ -240,6 +469,7 @@
                 Settings
 
             </button>
+
 
         </div>
 
@@ -259,11 +489,13 @@
 
         <div class="topbar">
 
+
             <div>
 
                 <h1>
                     Knowledge Base
                 </h1>
+
 
                 <p>
                     Upload documents and build your RAG knowledge base.
@@ -279,6 +511,7 @@
             >
                 + Add New
             </button>
+
 
         </div>
 
@@ -360,25 +593,34 @@
 
                 <div class="category-selector">
 
+
                     <label for="documentCategory">
                         Knowledge Category
                     </label>
 
+
                     <select id="documentCategory">
+
+                        <option value="" diabled selected>
+                            Select Knowledge Category
+                        </option>
 
                         <option value="salesforce">
                             Salesforce (SF)
                         </option>
 
+
                         <option value="non_sf">
                             Non-SF
                         </option>
+
 
                         <option value="telecom">
                             Telecom
                         </option>
 
                     </select>
+
 
                 </div>
 
@@ -409,15 +651,18 @@
 
             <div class="documents-header">
 
+
                 <div>
 
                     <span class="breadcrumb">
                         Home
                     </span>
 
+
                     <span class="separator">
                         ›
                     </span>
+
 
                     <strong>
                         Knowledge Base
@@ -430,6 +675,7 @@
                     0 documents
                 </span>
 
+
             </div>
 
 
@@ -438,9 +684,11 @@
 
             <div class="knowledge-documents-header">
 
+
                 <div class="knowledge-documents-title">
                     Knowledge Base
                 </div>
+
 
                 <div
                     id="documentCountSecondary"
@@ -448,6 +696,7 @@
                 >
                     0 documents
                 </div>
+
 
             </div>
 
@@ -457,21 +706,27 @@
                 class="document-list"
             >
 
+
                 <div class="empty-state">
+
 
                     <div>
                         📄
                     </div>
 
+
                     <p>
                         Loading documents.
                     </p>
+
 
                     <span>
                         Upload a document to get started.
                     </span>
 
+
                 </div>
+
 
             </div>
 
@@ -500,42 +755,56 @@
 
                 <div class="ask-header">
 
+
                     <div class="ask-header-top">
+
 
                         <div class="ask-icon">
                             ✦
                         </div>
 
+
                         <div class="ask-header-copy">
+
 
                             <div class="ask-eyebrow">
                                 KNOWLEDGE ASSISTANT
                             </div>
 
+
                             <h2>
                                 Ask your knowledge base
                             </h2>
+
 
                             <p>
                                 Ask questions about your uploaded documents and get grounded answers with sources.
                             </p>
 
+
                         </div>
+
 
                     </div>
 
 
                     <div class="ask-header-status">
 
+
                         <span class="ask-live-dot"></span>
+
 
                         RAG retrieval active
 
+
                         <span class="ask-status-divider"></span>
+
 
                         Sources included automatically
 
+
                     </div>
+
 
                 </div>
 
@@ -556,13 +825,16 @@
                         class="ask-empty-state"
                     >
 
+
                         <div class="ask-empty-orb">
                             ✦
                         </div>
 
+
                         <h3>
                             Start a conversation
                         </h3>
+
 
                         <p>
                             Ask about Salesforce, Non-SF, Telecom, or any document in your knowledge base.
@@ -600,6 +872,7 @@
 
 
                         </div>
+
 
                     </div>
 
@@ -671,6 +944,7 @@
                     class="answer-container hidden"
                     aria-hidden="true"
                 >
+
 
                     <div class="answer-label">
                         AI Assistant
@@ -773,6 +1047,7 @@
 
                 <div class="system-status-row">
 
+
                     <span class="system-status-label">
                         Knowledge Base
                     </span>
@@ -782,10 +1057,12 @@
                         Ready
                     </strong>
 
+
                 </div>
 
 
                 <div class="system-status-row">
+
 
                     <span class="system-status-label">
                         Total Chunks
@@ -796,10 +1073,12 @@
                         —
                     </strong>
 
+
                 </div>
 
 
                 <div class="system-status-row">
+
 
                     <span class="system-status-label">
                         Last Updated
@@ -809,6 +1088,7 @@
                     <strong id="assistantLastUpdated">
                         —
                     </strong>
+
 
                 </div>
 
@@ -847,6 +1127,7 @@
                                 Salesforce (SF)
                             </strong>
 
+
                             <span>
                                 Loading...
                             </span>
@@ -855,7 +1136,6 @@
 
 
                     </div>
-
 
 
                     <div class="domain-row">
@@ -872,6 +1152,7 @@
                                 Non-SF
                             </strong>
 
+
                             <span>
                                 Loading...
                             </span>
@@ -880,7 +1161,6 @@
 
 
                     </div>
-
 
 
                     <div class="domain-row">
@@ -896,6 +1176,7 @@
                             <strong>
                                 Telecom
                             </strong>
+
 
                             <span>
                                 Loading...
@@ -931,6 +1212,7 @@
 
             <div>
 
+
                 <strong>
                     Grounded answers
                 </strong>
@@ -940,11 +1222,11 @@
                     Answers are generated from your indexed documents.
                 </p>
 
+
             </div>
 
 
         </div>
-
 
 
         <div class="assistant-disclaimer">

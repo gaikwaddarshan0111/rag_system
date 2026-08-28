@@ -173,6 +173,12 @@ const sourcesElement =
     );
 
 
+function getSelectedCategory() {
+    if (!documentCategory){
+        return null;
+    }
+    return documentCategory.value || null
+}
 // =========================================================
 // AUTH HELPERS
 // =========================================================
@@ -311,6 +317,16 @@ function formatTime(date = new Date()) {
 
 function logout() {
 
+    // ============================
+    // CLEAR ASK CONVERSATION
+    // ============================
+
+    clearAskHistory();
+
+
+    // ==============================
+    // CLEAR AUTHENTICATION
+    // ==============================
     localStorage.removeItem(
         "access_token"
     );
@@ -323,9 +339,9 @@ function logout() {
         "role"
     );
 
+    
 
     showLogin();
-
 }
 
 
@@ -3294,6 +3310,8 @@ async function askQuestion(
     }
 
 
+
+
     const response =
         await fetch(
             "/ask",
@@ -3313,7 +3331,8 @@ async function askQuestion(
                 body:
                     JSON.stringify({
                         question:
-                            question
+                            question,
+                            
                     })
 
             }
