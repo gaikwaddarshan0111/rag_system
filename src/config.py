@@ -84,3 +84,19 @@ MAX_UPLOAD_SIZE_MB = int(
 ALLOWED_EXTENSIONS = {
     ".pdf"
 }
+
+
+
+# =========================================================
+# WEB SEARCH
+# =========================================================
+
+TAVILY_API_KEY = os.getenv(
+    "TAVILY_API_KEY"
+)
+
+
+WEB_SEARCH_PROVIDER = os.getenv(
+    "WEB_SEARCH_PROVIDER",
+    "tavily"
+).lower()
