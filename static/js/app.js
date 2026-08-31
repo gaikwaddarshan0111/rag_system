@@ -4534,10 +4534,8 @@ document.addEventListener(
             "DOM loaded."
         );
 
-
         const authenticated =
             await verifyAuthentication();
-
 
         if (
             authenticated
