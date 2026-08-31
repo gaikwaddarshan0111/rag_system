@@ -122,6 +122,31 @@ const chooseFileButton =
         "chooseFileButton"
     );
 
+const selectedFilesSection =
+    document.getElementById(
+        "selectedFilesSection"
+    );
+
+const selectedFilesList =
+    document.getElementById(
+        "selectedFilesList"
+    );
+
+const selectedFilesCount =
+    document.getElementById(
+        "selectedFilesCount"
+    );
+
+const clearSelectedFilesButton =
+    document.getElementById(
+        "clearSelectedFilesButton"
+    );
+
+const addMoreFilesButton =
+    document.getElementById(
+        "addMoreFilesButton"
+    );
+
 const addDocumentButton =
     document.getElementById(
         "addDocumentButton"
@@ -141,6 +166,32 @@ const trainButton =
     document.getElementById(
         "trainButton"
     );
+
+
+// =========================================================
+// PENDING FILE STATE
+// =========================================================
+//
+// Files selected by the admin are kept here until
+// "Build Knowledge Base" is clicked.
+//
+
+let pendingFiles = [];
+
+
+// =========================================================
+// CURRENT UPLOAD STATE
+// =========================================================
+//
+// This contains ONLY the documents uploaded during
+// the current upload session.
+//
+// IMPORTANT:
+// This is intentionally separate from the complete
+// document list returned by /documents.
+//
+
+let currentUploadedDocuments = [];
 
 
 // =========================================================
@@ -173,12 +224,26 @@ const sourcesElement =
     );
 
 
+// =========================================================
+// GET SELECTED CATEGORY
+// =========================================================
+
 function getSelectedCategory() {
-    if (!documentCategory){
+
+    if (!documentCategory) {
+
         return null;
+
     }
-    return documentCategory.value || null
+
+    return (
+        documentCategory.value ||
+        null
+    );
+
 }
+
+
 // =========================================================
 // AUTH HELPERS
 // =========================================================
@@ -208,7 +273,9 @@ function getRole() {
 function escapeHtml(text) {
 
     const div =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
     div.textContent =
         text ?? "";
@@ -279,7 +346,9 @@ function formatDate(dateString) {
 
 
     const date =
-        new Date(dateString);
+        new Date(
+            dateString
+        );
 
 
     return date.toLocaleDateString(
@@ -298,7 +367,9 @@ function formatDate(dateString) {
 // FORMAT TIME
 // =========================================================
 
-function formatTime(date = new Date()) {
+function formatTime(
+    date = new Date()
+) {
 
     return date.toLocaleTimeString(
         undefined,
@@ -306,6 +377,38 @@ function formatTime(date = new Date()) {
             hour: "numeric",
             minute: "2-digit"
         }
+    );
+
+}
+
+
+// =========================================================
+// FORMAT PENDING FILE SIZE
+// =========================================================
+
+function formatPendingFileSize(
+    bytes
+) {
+
+    if (
+        bytes < 1024 * 1024
+    ) {
+
+        return (
+            (bytes / 1024)
+                .toFixed(1)
+            +
+            " KB"
+        );
+
+    }
+
+
+    return (
+        (bytes / 1024 / 1024)
+            .toFixed(2)
+        +
+        " MB"
     );
 
 }
@@ -324,9 +427,27 @@ function logout() {
     clearAskHistory();
 
 
-    // ==============================
+    // ============================
+    // CLEAR PENDING FILES
+    // ============================
+
+    pendingFiles = [];
+
+    currentUploadedDocuments = [];
+
+    syncFileInput();
+
+    renderSelectedFiles();
+
+    renderCurrentUploadedDocuments(
+        []
+    );
+
+
+    // ============================
     // CLEAR AUTHENTICATION
-    // ==============================
+    // ============================
+
     localStorage.removeItem(
         "access_token"
     );
@@ -339,9 +460,9 @@ function logout() {
         "role"
     );
 
-    
 
     showLogin();
+
 }
 
 
@@ -450,31 +571,39 @@ function showApp() {
     // =====================================================
 
     document
-        .querySelectorAll(".admin-only")
-        .forEach(element => {
+        .querySelectorAll(
+            ".admin-only"
+        )
+        .forEach(
+            element => {
 
-            if (role === "admin") {
+                if (
+                    role === "admin"
+                ) {
 
-                element.classList.remove(
-                    "hidden"
-                );
+                    element.classList.remove(
+                        "hidden"
+                    );
 
-            } else {
+                } else {
 
-                element.classList.add(
-                    "hidden"
-                );
+                    element.classList.add(
+                        "hidden"
+                    );
+
+                }
 
             }
-
-        });
+        );
 
 
     // =====================================================
     // AGENT DEFAULT VIEW
     // =====================================================
 
-    if (role !== "admin") {
+    if (
+        role !== "admin"
+    ) {
 
         if (trainMode) {
 
@@ -683,6 +812,10 @@ modeTabs.forEach(
                     tab.dataset.mode;
 
 
+                // =========================================
+                // ADMIN SECURITY CHECK
+                // =========================================
+
                 if (
                     mode === "train" &&
                     getRole() !== "admin"
@@ -803,7 +936,174 @@ if (addDocumentButton) {
 
 
 // =========================================================
-// FILE SELECTION
+// SYNC FILE INPUT
+// =========================================================
+//
+// Keeps the hidden native file input synchronized
+// with the pending file array.
+//
+
+function syncFileInput() {
+
+    if (!fileInput) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const dataTransfer =
+            new DataTransfer();
+
+
+        pendingFiles.forEach(
+            file => {
+
+                dataTransfer.items.add(
+                    file
+                );
+
+            }
+        );
+
+
+        fileInput.files =
+            dataTransfer.files;
+
+    } catch (error) {
+
+        console.warn(
+            "Unable to synchronize file input:",
+            error
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// FILE SELECTION / PREVIEW
+// =========================================================
+
+function handleFileSelection(
+    selectedFiles
+) {
+
+    if (
+        getRole() !== "admin"
+    ) {
+
+        return;
+
+    }
+
+
+    const files =
+        Array.from(
+            selectedFiles || []
+        );
+
+
+    if (
+        files.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const maxSize =
+        10 * 1024 * 1024;
+
+
+    // =====================================================
+    // VALIDATE FILES
+    // =====================================================
+
+    files.forEach(
+        file => {
+
+            const isPdf =
+                file.type ===
+                    "application/pdf" ||
+                file.name
+                    .toLowerCase()
+                    .endsWith(
+                        ".pdf"
+                    );
+
+
+            if (!isPdf) {
+
+                alert(
+                    `"${file.name}" is not a PDF file.`
+                );
+
+                return;
+
+            }
+
+
+            if (
+                file.size >
+                maxSize
+            ) {
+
+                alert(
+                    `"${file.name}" exceeds the 10MB limit.`
+                );
+
+                return;
+
+            }
+
+
+            // =============================================
+            // PREVENT DUPLICATES
+            // =============================================
+
+            const alreadySelected =
+                pendingFiles.some(
+                    existing =>
+                        existing.name ===
+                            file.name &&
+                        existing.size ===
+                            file.size &&
+                        existing.lastModified ===
+                            file.lastModified
+                );
+
+
+            if (
+                alreadySelected
+            ) {
+
+                return;
+
+            }
+
+
+            pendingFiles.push(
+                file
+            );
+
+        }
+    );
+
+
+    syncFileInput();
+
+    renderSelectedFiles();
+
+}
+
+
+// =========================================================
+// FILE INPUT CHANGE
 // =========================================================
 
 if (fileInput) {
@@ -812,14 +1112,219 @@ if (fileInput) {
         "change",
         () => {
 
-            const files =
-                Array.from(
-                    fileInput.files
+            handleFileSelection(
+                fileInput.files
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// RENDER SELECTED FILES
+// =========================================================
+
+function renderSelectedFiles() {
+
+    if (
+        !selectedFilesList ||
+        !selectedFilesSection
+    ) {
+
+        return;
+
+    }
+
+
+    selectedFilesList.innerHTML =
+        "";
+
+
+    // =====================================================
+    // NO FILES
+    // =====================================================
+
+    if (
+        pendingFiles.length === 0
+    ) {
+
+        selectedFilesSection.classList.add(
+            "hidden"
+        );
+
+
+        if (trainButton) {
+
+            trainButton.disabled =
+                true;
+
+        }
+
+
+        if (selectedFilesCount) {
+
+            selectedFilesCount.innerText =
+                "0 files";
+
+        }
+
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // SHOW SECTION
+    // =====================================================
+
+    selectedFilesSection.classList.remove(
+        "hidden"
+    );
+
+
+    // =====================================================
+    // UPDATE COUNT
+    // =====================================================
+
+    if (selectedFilesCount) {
+
+        selectedFilesCount.innerText =
+            `${pendingFiles.length} file${
+                pendingFiles.length === 1
+                    ? ""
+                    : "s"
+            }`;
+
+    }
+
+
+    // =====================================================
+    // CREATE FILE ITEMS
+    // =====================================================
+
+    pendingFiles.forEach(
+        (
+            file,
+            index
+        ) => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "selected-file-item";
+
+
+            item.innerHTML = `
+
+                <div class="selected-file-icon">
+                    📄
+                </div>
+
+
+                <div class="selected-file-info">
+
+                    <div class="selected-file-name">
+
+                        ${escapeHtml(
+                            file.name
+                        )}
+
+                    </div>
+
+
+                    <div class="selected-file-meta">
+
+                        ${formatPendingFileSize(
+                            file.size
+                        )}
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="remove-selected-file"
+                    data-index="${index}"
+                    title="Remove file"
+                    aria-label="Remove ${escapeHtml(
+                        file.name
+                    )}"
+                >
+                    ×
+                </button>
+
+            `;
+
+
+            selectedFilesList.appendChild(
+                item
+            );
+
+        }
+    );
+
+
+    // =====================================================
+    // BUILD BUTTON STATE
+    // =====================================================
+
+    if (trainButton) {
+
+        trainButton.disabled =
+            !(
+                pendingFiles.length >
+                    0 &&
+                documentCategory &&
+                documentCategory.value
+            );
+
+    }
+
+}
+
+
+// =========================================================
+// REMOVE SELECTED FILE
+// =========================================================
+
+if (
+    selectedFilesList
+) {
+
+    selectedFilesList.addEventListener(
+        "click",
+        event => {
+
+            const button =
+                event.target.closest(
+                    ".remove-selected-file"
+                );
+
+
+            if (!button) {
+
+                return;
+
+            }
+
+
+            const index =
+                Number(
+                    button.dataset.index
                 );
 
 
             if (
-                files.length === 0
+                Number.isNaN(index)
             ) {
 
                 return;
@@ -827,92 +1332,66 @@ if (fileInput) {
             }
 
 
-            if (documentList) {
-
-                documentList.innerHTML =
-                    "";
-
-            }
-
-
-            files.forEach(
-                file => {
-
-                    const item =
-                        document.createElement(
-                            "div"
-                        );
-
-
-                    item.className =
-                        "document-item";
-
-
-                    item.innerHTML = `
-
-                        <div class="document-icon">
-                            📄
-                        </div>
-
-
-                        <div class="document-info">
-
-                            <div class="document-name">
-
-                                ${escapeHtml(
-                                    file.name
-                                )}
-
-                            </div>
-
-
-                            <div class="document-meta">
-
-                                ${(
-                                    file.size /
-                                    1024 /
-                                    1024
-                                ).toFixed(2)} MB
-
-                            </div>
-
-                        </div>
-
-
-                        <span class="status-badge">
-                            Ready
-                        </span>
-
-                    `;
-
-
-                    if (documentList) {
-
-                        documentList.appendChild(
-                            item
-                        );
-
-                    }
-
-                }
+            pendingFiles.splice(
+                index,
+                1
             );
 
 
-            if (documentCount) {
+            syncFileInput();
 
-                documentCount.innerText =
-                    `${files.length} document${
-                        files.length > 1
-                            ? "s"
-                            : ""
-                    }`;
-
-            }
+            renderSelectedFiles();
 
         }
     );
 
 }
+
+
+// =========================================================
+// CLEAR SELECTED FILES
+// =========================================================
+
+if (
+    clearSelectedFilesButton
+) {
+
+    clearSelectedFilesButton.addEventListener(
+        "click",
+        () => {
+
+            pendingFiles = [];
+
+
+            syncFileInput();
+
+            renderSelectedFiles();
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// ADD MORE FILES
+// =========================================================
+
+if (
+    addMoreFilesButton
+) {
+
+    addMoreFilesButton.addEventListener(
+        "click",
+        () => {
+
+            openFilePicker();
+
+        }
+    );
+
+}
+
 
 // =========================================================
 // UPLOAD DOCUMENT
@@ -934,7 +1413,7 @@ async function uploadDocument(
 
     formData.append(
         "category",
-        documentCategory.value
+        getSelectedCategory()
     );
 
 
@@ -989,6 +1468,7 @@ async function uploadDocument(
 
         throw new Error(
             result.message ||
+            result.detail ||
             "Upload failed."
         );
 
@@ -1027,10 +1507,31 @@ if (trainButton) {
             }
 
 
-            const files =
-                Array.from(
-                    fileInput.files
+            // ==========================================
+            // CATEGORY CHECK
+            // ==========================================
+
+            const category =
+                getSelectedCategory();
+
+
+            if (!category) {
+
+                alert(
+                    "Please select a knowledge category."
                 );
+
+                return;
+
+            }
+
+
+            // ==========================================
+            // PENDING FILES
+            // ==========================================
+
+            const files =
+                [...pendingFiles];
 
 
             if (
@@ -1046,6 +1547,10 @@ if (trainButton) {
             }
 
 
+            // ==========================================
+            // DISABLE BUILD BUTTON
+            // ==========================================
+
             trainButton.disabled =
                 true;
 
@@ -1055,6 +1560,18 @@ if (trainButton) {
 
 
             try {
+
+                // ======================================
+                // RECORD UPLOAD START TIME
+                // ======================================
+
+                const uploadStartTime =
+                    new Date();
+
+
+                // ======================================
+                // UPLOAD EACH FILE
+                // ======================================
 
                 for (
                     const file of files
@@ -1079,14 +1596,46 @@ if (trainButton) {
                 }
 
 
+                // ======================================
+                // SUCCESS
+                // ======================================
+
                 trainButton.innerText =
-                    "Completed ✓";
+                    "Uploaded ✓";
 
 
-                await loadAllDocuments();
+                // ======================================
+                // CLEAR PENDING FILES
+                // ======================================
+
+                pendingFiles = [];
 
 
-                // Refresh assistant statistics
+                syncFileInput();
+
+                renderSelectedFiles();
+
+
+                // ======================================
+                // LOAD ONLY CURRENT UPLOAD
+                // ======================================
+
+                const uploadedFileNames =
+                    files.map(
+                        file => file.name
+                    );
+
+
+                await loadUploadedDocuments(
+                    uploadedFileNames,
+                    uploadStartTime
+                );
+
+
+                // ======================================
+                // REFRESH ASSISTANT STATISTICS
+                // ======================================
+
                 await loadAssistantOverview();
 
 
@@ -1113,7 +1662,11 @@ if (trainButton) {
                     () => {
 
                         trainButton.disabled =
-                            false;
+                            !(
+                                pendingFiles.length >
+                                    0 &&
+                                getSelectedCategory()
+                            );
 
 
                         trainButton.innerText =
@@ -1162,7 +1715,8 @@ function createDocumentCard(
 
 
     const statusClass =
-        doc.status === "indexed"
+        doc.status === "indexed" ||
+        doc.status === "ready"
             ? "status-indexed"
             : doc.status === "failed"
                 ? "status-failed"
@@ -1170,8 +1724,9 @@ function createDocumentCard(
 
 
     const statusText =
-        doc.status === "indexed"
-            ? "Indexed"
+        doc.status === "indexed" ||
+        doc.status === "ready"
+            ? "Ready"
             : doc.status === "failed"
                 ? "Failed"
                 : "Processing";
@@ -1242,6 +1797,14 @@ function createDocumentCard(
 // =========================================================
 // LOAD ALL DOCUMENTS
 // =========================================================
+//
+// IMPORTANT:
+// This function is ONLY used by the Documents page,
+// Teams page and statistics.
+//
+// It must NOT be used to populate the Home/Train
+// current-upload list.
+//
 
 async function loadAllDocuments() {
 
@@ -1373,21 +1936,31 @@ function renderAllDocuments(
     const container =
         document.getElementById(
             "allDocumentsList"
-        );
+        ) ||
+        documentList;
 
 
     const count =
         document.getElementById(
             "allDocumentsCount"
-        );
+        ) ||
+        documentCount;
 
 
     if (!container) {
+
+        console.warn(
+            "Document list container not found."
+        );
 
         return;
 
     }
 
+
+    // =====================================================
+    // UPDATE DOCUMENT COUNT
+    // =====================================================
 
     if (count) {
 
@@ -1401,9 +1974,17 @@ function renderAllDocuments(
     }
 
 
+    // =====================================================
+    // CLEAR CURRENT LIST
+    // =====================================================
+
     container.innerHTML =
         "";
 
+
+    // =====================================================
+    // EMPTY STATE
+    // =====================================================
 
     if (
         documents.length === 0
@@ -1413,13 +1994,412 @@ function renderAllDocuments(
 
             <div class="empty-state">
 
-                <div>
+                <div class="empty-state-icon">
+                    📄
+                </div>
+
+                <p>
+                    No documents yet
+                </p>
+
+                <span>
+                    Upload a PDF above to build
+                    your knowledge base.
+                </span>
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    // =====================================================
+    // RENDER DOCUMENTS
+    // =====================================================
+
+    documents.forEach(
+        doc => {
+
+            container.appendChild(
+                createDocumentCard(
+                    doc
+                )
+            );
+
+        }
+    );
+
+}
+
+
+// =========================================================
+// LOAD CURRENT UPLOADED DOCUMENTS
+// =========================================================
+//
+// This is deliberately separate from loadAllDocuments().
+//
+// The Home / Train page should display ONLY documents
+// uploaded during the current upload operation.
+//
+// We fetch the complete document list from the backend,
+// then select the newest matching document for each
+// uploaded filename.
+//
+
+async function loadUploadedDocuments(
+    uploadedFileNames,
+    uploadStartTime = null
+) {
+
+    const token =
+        getToken();
+
+
+    if (!token) {
+
+        return;
+
+    }
+
+
+    if (
+        !Array.isArray(
+            uploadedFileNames
+        ) ||
+        uploadedFileNames.length === 0
+    ) {
+
+        renderCurrentUploadedDocuments(
+            []
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        console.log(
+            "Loading current uploaded documents:",
+            uploadedFileNames
+        );
+
+
+        const response =
+            await fetch(
+                "/documents",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${token}`
+                    }
+                }
+            );
+
+
+        const documents =
+            await response.json();
+
+
+        if (
+            response.status === 401
+        ) {
+
+            logout();
+
+            return;
+
+        }
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                documents.detail ||
+                "Unable to load uploaded documents."
+            );
+
+        }
+
+
+        const documentArray =
+            Array.isArray(
+                documents
+            )
+                ? documents
+                : [];
+
+
+        // =================================================
+        // FIND CURRENT UPLOADS
+        // =================================================
+        //
+        // For every uploaded filename:
+        //
+        // 1. Find documents with the same filename.
+        // 2. Prefer documents created after this upload began.
+        // 3. If timestamps aren't available, use the newest
+        //    matching document.
+        //
+        // This prevents an older document with the same
+        // filename from appearing on the Home page.
+        //
+
+        const currentDocuments = [];
+
+
+        uploadedFileNames.forEach(
+            fileName => {
+
+                const matchingDocuments =
+                    documentArray.filter(
+                        doc =>
+                            doc.filename ===
+                            fileName
+                    );
+
+
+                if (
+                    matchingDocuments.length === 0
+                ) {
+
+                    return;
+
+                }
+
+
+                let candidates =
+                    matchingDocuments;
+
+
+                // =========================================
+                // PREFER DOCUMENTS CREATED DURING THIS UPLOAD
+                // =========================================
+
+                if (
+                    uploadStartTime
+                ) {
+
+                    const recentDocuments =
+                        matchingDocuments.filter(
+                            doc => {
+
+                                if (
+                                    !doc.created_at
+                                ) {
+
+                                    return false;
+
+                                }
+
+
+                                const createdAt =
+                                    new Date(
+                                        doc.created_at
+                                    );
+
+
+                                return (
+                                    !Number.isNaN(
+                                        createdAt.getTime()
+                                    ) &&
+                                    createdAt >=
+                                        uploadStartTime
+                                );
+
+                            }
+                        );
+
+
+                    if (
+                        recentDocuments.length > 0
+                    ) {
+
+                        candidates =
+                            recentDocuments;
+
+                    }
+
+                }
+
+
+                // =========================================
+                // SORT NEWEST FIRST
+                // =========================================
+
+                candidates.sort(
+                    (
+                        a,
+                        b
+                    ) => {
+
+                        const dateA =
+                            a.created_at
+                                ? new Date(
+                                    a.created_at
+                                ).getTime()
+                                : 0;
+
+
+                        const dateB =
+                            b.created_at
+                                ? new Date(
+                                    b.created_at
+                                ).getTime()
+                                : 0;
+
+
+                        return dateB - dateA;
+
+                    }
+                );
+
+
+                // =========================================
+                // TAKE NEWEST MATCH
+                // =========================================
+
+                if (
+                    candidates.length > 0
+                ) {
+
+                    currentDocuments.push(
+                        candidates[0]
+                    );
+
+                }
+
+            }
+        );
+
+
+        // =================================================
+        // STORE CURRENT UPLOAD
+        // =================================================
+
+        currentUploadedDocuments =
+            currentDocuments;
+
+
+        console.log(
+            "Current uploaded documents:",
+            currentUploadedDocuments
+        );
+
+
+        // =================================================
+        // RENDER ONLY CURRENT UPLOAD
+        // =================================================
+
+        renderCurrentUploadedDocuments(
+            currentUploadedDocuments
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Failed to load current uploaded documents:",
+            error
+        );
+
+
+        renderCurrentUploadedDocuments(
+            []
+        );
+
+    }
+
+}
+
+
+// =========================================================
+// RENDER CURRENT UPLOADED DOCUMENTS
+// =========================================================
+//
+// This list is used ONLY on the Home / Train page.
+//
+
+function renderCurrentUploadedDocuments(
+    documents
+) {
+
+    const container =
+        documentList;
+
+
+    const count =
+        documentCount;
+
+
+    if (!container) {
+
+        console.warn(
+            "Current upload document list container not found."
+        );
+
+        return;
+
+    }
+
+
+    const documentArray =
+        Array.isArray(
+            documents
+        )
+            ? documents
+            : [];
+
+
+    // =====================================================
+    // UPDATE COUNT
+    // =====================================================
+
+    if (count) {
+
+        count.innerText =
+            `${documentArray.length} document${
+                documentArray.length === 1
+                    ? ""
+                    : "s"
+            }`;
+
+    }
+
+
+    // =====================================================
+    // CLEAR LIST
+    // =====================================================
+
+    container.innerHTML =
+        "";
+
+
+    // =====================================================
+    // EMPTY STATE
+    // =====================================================
+
+    if (
+        documentArray.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
                     📄
                 </div>
 
 
                 <p>
-                    No documents yet.
+                    No documents uploaded yet
                 </p>
 
 
@@ -1436,7 +2416,11 @@ function renderAllDocuments(
     }
 
 
-    documents.forEach(
+    // =====================================================
+    // RENDER CURRENT UPLOADS
+    // =====================================================
+
+    documentArray.forEach(
         doc => {
 
             container.appendChild(
@@ -2025,7 +3009,9 @@ function showHomeView() {
     );
 
 
-    if (role === "admin") {
+    if (
+        role === "admin"
+    ) {
 
         const trainTab =
             document.querySelector(
@@ -2058,6 +3044,20 @@ function showHomeView() {
             );
 
         }
+
+
+        // =============================================
+        // IMPORTANT
+        // =============================================
+        //
+        // DO NOT call loadAllDocuments() here.
+        //
+        // Home page must show ONLY the current upload.
+        //
+
+        renderCurrentUploadedDocuments(
+            currentUploadedDocuments
+        );
 
     } else {
 
@@ -2488,6 +3488,15 @@ function showTeamDocuments(
 
 
     if (
+        !container
+    ) {
+
+        return;
+
+    }
+
+
+    if (
         documents.length === 0
     ) {
 
@@ -2551,6 +3560,8 @@ function showTeamDocuments(
     }
 
 }
+
+
 // =========================================================
 // ASK - USER MESSAGE
 // =========================================================
@@ -2812,9 +3823,16 @@ function normalizeSources(
                 ) {
 
                     return {
-                        name: source,
-                        page: null,
-                        score: null
+
+                        name:
+                            source,
+
+                        page:
+                            null,
+
+                        score:
+                            null
+
                     };
 
                 }
@@ -2842,8 +3860,8 @@ function normalizeSources(
                             null,
 
                         score:
-                            source.score ||
-                            source.similarity ||
+                            source.score ??
+                            source.similarity ??
                             null
 
                     };
@@ -2924,6 +3942,7 @@ function createSourcesHtml(
                                 ${
                                     source.page
                                         ? `
+
                                             <div class="source-page">
 
                                                 Page
@@ -2932,6 +3951,7 @@ function createSourcesHtml(
                                                 )}
 
                                             </div>
+
                                         `
                                         : ""
                                 }
@@ -2943,6 +3963,7 @@ function createSourcesHtml(
                             ${
                                 source.score !== null
                                     ? `
+
                                         <span class="source-score">
 
                                             ${(
@@ -2952,6 +3973,7 @@ function createSourcesHtml(
                                             ).toFixed(0)}%
 
                                         </span>
+
                                     `
                                     : ""
                             }
@@ -3108,11 +4130,13 @@ function scrollAskToBottom() {
         () => {
 
             askResults.scrollTo({
+
                 top:
                     askResults.scrollHeight,
 
                 behavior:
                     "smooth"
+
             });
 
         }
@@ -3201,13 +4225,6 @@ function clearAskHistory() {
 
         sourcesElement.innerHTML =
             "";
-
-    }
-
-
-    if (questionInput) {
-
-        questionInput.focus();
 
     }
 
@@ -3310,8 +4327,6 @@ async function askQuestion(
     }
 
 
-
-
     const response =
         await fetch(
             "/ask",
@@ -3330,9 +4345,10 @@ async function askQuestion(
 
                 body:
                     JSON.stringify({
+
                         question:
-                            question,
-                            
+                            question
+
                     })
 
             }
@@ -3504,7 +4520,7 @@ async function handleAsk() {
 
 
         // ======================================
-        // MAIN DYNAMIC ANSWER
+        // ADD AI RESPONSE
         // ======================================
 
         addAssistantMessage(
@@ -3513,10 +4529,42 @@ async function handleAsk() {
         );
 
 
+    } catch (error) {
+
+        console.error(
+            "Ask error:",
+            error
+        );
+
+
+        removeLoadingMessage();
+
+
         addAssistantMessage(
-            answer,
-            sources
-        )
+            `Sorry, I was unable to process your question. ${error.message}`,
+            []
+        );
+
+
+    } finally {
+
+        if (askButton) {
+
+            askButton.disabled =
+                false;
+
+        }
+
+
+        if (questionInput) {
+
+            questionInput.focus();
+
+        }
+
+    }
+
+}
 
 
 // =========================================================
@@ -3584,6 +4632,7 @@ if (questionInput) {
 
 
                 if (
+                    askButton &&
                     !askButton.disabled
                 ) {
 
@@ -3658,6 +4707,8 @@ if (chatSendButton) {
     );
 
 }
+
+
 // =========================================================
 // ASSISTANT OVERVIEW
 // =========================================================
@@ -3990,7 +5041,10 @@ function updateAssistantDomainCounts(
                 );
 
 
-            if (!strong || !span) {
+            if (
+                !strong ||
+                !span
+            ) {
 
                 return;
 
@@ -4058,6 +5112,14 @@ function updateAssistantDomainCounts(
 // =========================================================
 // DOCUMENT LIST INITIALIZATION
 // =========================================================
+//
+// IMPORTANT:
+// Do NOT load all documents on application startup.
+// The Home page should start with an empty current-upload
+// list and only populate it after a successful upload.
+//
+// The Documents page loads all documents when opened.
+//
 
 async function initializeDocuments() {
 
@@ -4070,18 +5132,11 @@ async function initializeDocuments() {
     }
 
 
-    try {
+    // Start Home page with current-session documents only.
 
-        await loadAllDocuments();
-
-    } catch (error) {
-
-        console.error(
-            "Document initialization failed:",
-            error
-        );
-
-    }
+    renderCurrentUploadedDocuments(
+        currentUploadedDocuments
+    );
 
 }
 
@@ -4165,66 +5220,27 @@ if (uploadCard) {
 
             const files =
                 Array.from(
-                    event.dataTransfer.files
-                );
-
-
-            const pdfFiles =
-                files.filter(
-                    file =>
-                        file.name
-                            .toLowerCase()
-                            .endsWith(
-                                ".pdf"
-                            )
+                    event.dataTransfer.files ||
+                    []
                 );
 
 
             if (
-                pdfFiles.length === 0
+                files.length === 0
             ) {
-
-                alert(
-                    "Please drop PDF files only."
-                );
 
                 return;
 
             }
 
 
-            if (fileInput) {
+            // =========================================
+            // USE THE SAME FILE SELECTION LOGIC
+            // =========================================
 
-                const dataTransfer =
-                    new DataTransfer();
-
-
-                pdfFiles.forEach(
-                    file => {
-
-                        dataTransfer.items.add(
-                            file
-                        );
-
-                    }
-                );
-
-
-                fileInput.files =
-                    dataTransfer.files;
-
-
-                fileInput.dispatchEvent(
-                    new Event(
-                        "change",
-                        {
-                            bubbles:
-                                true
-                        }
-                    )
-                );
-
-            }
+            handleFileSelection(
+                files
+            );
 
         }
     );
@@ -4284,6 +5300,11 @@ if (documentCategory) {
                 "Document category:",
                 event.target.value
             );
+
+
+            // Update Build button state
+
+            renderSelectedFiles();
 
         }
     );
@@ -4345,17 +5366,34 @@ function initializeApp() {
     initializeNavigation();
 
 
-    // Load admin documents
+    // =====================================================
+    // DO NOT LOAD ALL DOCUMENTS HERE
+    // =====================================================
+    //
+    // Previously this called:
+    //
+    //     loadAllDocuments();
+    //
+    // That caused all 18 documents to appear on the
+    // Home / Train page.
+    //
+    // The Documents page loads all documents separately.
+    //
+
+
     if (
         getRole() === "admin"
     ) {
 
-        loadAllDocuments();
+        initializeDocuments();
 
     }
 
 
-    // Load knowledge-base statistics
+    // =====================================================
+    // LOAD KNOWLEDGE-BASE STATISTICS
+    // =====================================================
+
     loadAssistantOverview();
 
 }
@@ -4534,8 +5572,10 @@ document.addEventListener(
             "DOM loaded."
         );
 
+
         const authenticated =
             await verifyAuthentication();
+
 
         if (
             authenticated

@@ -792,7 +792,10 @@
                     multiple
                     hidden
                 >
-
+               
+                <!-- =========================================================
+                                   KNOWLEDGE CATEGORY
+                     ========================================================= -->
 
                 <div class="category-selector">
 
@@ -826,25 +829,77 @@
 
 
                 </div>
+                <!-- =========================================================
+                            SELECTED FILES PREVIEW
+                ========================================================= -->
+                <div
+                    id="selectedFilesSection"
+                    class="selected-files-section hidden">
 
+                    <div class="selected-files-header">
+                        <div>
+                            <strong>
+                                Selected Files
+                            </strong>
 
+                            <span id="selectedFilesCount">
+                                0 Files
+                            </span>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="clearSelectedFilesButton"
+                            class="clear-files-button">
+                            Clear All
+                        </button>
+                    </div>
+
+                    <div
+                       id="selectedFilesList"
+                       class="selected-files-list">
+                    </div>
+
+                    <button
+                       type="button"
+                       id="addMoreFilesButton"
+                       class="add-more-files-button"
+                       >
+                       <span>+</span>
+                       Add More Files
+                    </button>
+                </div>
+                <!-- =========================================================
+                   CHOOSE FILES
+                ========================================================= -->
                 <button
-                    id="chooseFileButton"
-                    class="upload-button"
-                    type="button"
-                >
-                    Choose Files
+                   id="chooseFileButton"
+                   class="upload-button"
+                   type="button"
+                > 
+                Choose Files
                 </button>
 
+                <!-- Build -->
+                 <button
+                     id="trainButton"
+                     class="build-button"
+                     type="button"
+                     disabled   
+                     >
+                     Build Knowledge Base
+                    </button>
 
-                <button
-                    id="trainButton"
-                    class="build-button"
-                    type="button"
-                >
-                    Build Knowledge Base
-                </button>
+                <!-- UPLOAD INFO -->
+                 <div class="upload-info">
+                    <span class="upload-info-icon">
+                        ⓘ
+                    </span>
 
+                    <span>
+                        Only PDF files are supported. File size must be less than 10MB
+                    </span>
+                 </div>
 
             </div>
 
@@ -1598,7 +1653,7 @@
      JAVASCRIPT
 ========================================================= -->
 
-<script src="/static/js/app.js"></script>
+<script src="/static/js/app.js?v=4"></script>
 <script>
 /* =========================================================
    QUICK START ROLE VISIBILITY

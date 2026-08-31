@@ -3414,3 +3414,311 @@ button {
 
     line-height: 1.5;
 }
+
+/* =========================================================
+   SELECTED FILES PREVIEW
+========================================================= */
+
+.selected-files-section {
+    width: 100%;
+    margin-top: 24px;
+    padding: 18px;
+
+    border: 1px solid var(--border);
+    border-radius: 14px;
+
+    background: rgba(15, 18, 25, 0.65);
+}
+
+
+.selected-files-section.hidden {
+    display: none;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.selected-files-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+}
+
+
+.selected-files-header > div {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.selected-files-header strong {
+    color: var(--text);
+
+    font-size: 14px;
+}
+
+
+#selectedFilesCount {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+
+.clear-files-button {
+    border: none;
+
+    background: transparent;
+
+    color: #ef4444;
+
+    font-size: 12px;
+
+    cursor: pointer;
+
+    padding: 5px 8px;
+
+    border-radius: 6px;
+}
+
+
+.clear-files-button:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+
+/* =========================================================
+   FILE LIST
+========================================================= */
+
+.selected-files-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+
+/* =========================================================
+   FILE ITEM
+========================================================= */
+
+.selected-file-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 10px;
+
+    background: var(--panel);
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+
+.selected-file-item:hover {
+    border-color: rgba(59, 130, 246, 0.5);
+
+    background: var(--panel-hover);
+}
+
+
+/* =========================================================
+   PDF ICON
+========================================================= */
+
+.selected-file-icon {
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: rgba(239, 68, 68, 0.12);
+
+    color: #ef4444;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   FILE INFORMATION
+========================================================= */
+
+.selected-file-info {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.selected-file-name {
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+
+    color: var(--text);
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+
+.selected-file-meta {
+    margin-top: 4px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   REMOVE BUTTON
+========================================================= */
+
+.remove-selected-file {
+    width: 32px;
+    height: 32px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(239, 68, 68, 0.35);
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #ef4444;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.remove-selected-file:hover {
+    background: rgba(239, 68, 68, 0.12);
+
+    border-color: #ef4444;
+}
+
+
+/* =========================================================
+   ADD MORE
+========================================================= */
+
+.add-more-files-button {
+    margin-top: 12px;
+
+    padding: 8px 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: var(--blue-light);
+
+    font-size: 12px;
+
+    cursor: pointer;
+}
+
+
+.add-more-files-button:hover {
+    text-decoration: underline;
+}
+
+
+.add-more-files-button span {
+    font-size: 16px;
+
+    margin-right: 4px;
+}
+
+
+/* =========================================================
+   UPLOAD INFO
+========================================================= */
+
+.upload-info {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+    padding: 12px 14px;
+
+    border: 1px solid rgba(59, 130, 246, 0.2);
+
+    border-radius: 10px;
+
+    background: rgba(59, 130, 246, 0.06);
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    text-align: left;
+}
+
+
+.upload-info-icon {
+    color: var(--blue-light);
+
+    font-size: 15px;
+}
+
+
+/* =========================================================
+   BUILD BUTTON
+========================================================= */
+
+#trainButton:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
