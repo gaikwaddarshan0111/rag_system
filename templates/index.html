@@ -14,8 +14,211 @@
 
     <link
         rel="stylesheet"
-        href="/static/css/style.css"
+        href="/static/css/style.css?v=2"
     >
+    
+
+<style>
+/* =========================================================
+   AGENT QUICK START
+========================================================= */
+
+.agent-quick-start {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    background: var(--sidebar, #0b0d10);
+    border-left: 1px solid var(--border, #252a33);
+    box-sizing: border-box;
+}
+
+.quick-start-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border, #252a33);
+}
+
+.quick-start-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--blue, #2563eb);
+    color: #fff;
+    font-size: 18px;
+}
+
+.quick-start-header strong {
+    display: block;
+    color: var(--text, #f4f4f5);
+    font-size: 17px;
+}
+
+.quick-start-header p {
+    margin: 5px 0 0;
+    color: var(--muted, #8b93a7);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.quick-start-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.quick-start-heading {
+    margin-bottom: 4px;
+    color: var(--text, #f4f4f5);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.quick-category {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--border, #252a33);
+    border-radius: 12px;
+    background: var(--panel, #11141a);
+    color: var(--text, #f4f4f5);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.quick-category:hover {
+    border-color: var(--blue, #2563eb);
+    background: var(--panel-hover, #171b23);
+    transform: translateY(-1px);
+}
+
+.quick-category-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.quick-category-icon.salesforce {
+    background: rgba(0, 174, 239, .15);
+    color: #00aef0;
+}
+
+.quick-category-icon.nonsf {
+    background: rgba(25, 195, 125, .15);
+    color: #19c37d;
+}
+
+.quick-category-icon.telecom {
+    background: rgba(139, 92, 246, .15);
+    color: #8b5cf6;
+}
+
+.quick-category-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.quick-category-content strong {
+    display: block;
+    font-size: 13px;
+}
+
+.quick-category-content small {
+    display: block;
+    margin-top: 4px;
+    color: var(--muted, #8b93a7);
+    font-size: 11px;
+}
+
+.quick-arrow {
+    color: var(--muted, #8b93a7);
+    font-size: 18px;
+}
+
+.quick-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 11px 13px;
+    border: 1px solid var(--border, #252a33);
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text, #f4f4f5);
+    font-size: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: background .2s ease, border-color .2s ease;
+}
+
+.quick-question:hover {
+    background: var(--panel, #11141a);
+    border-color: var(--blue, #2563eb);
+}
+
+.quick-question span:last-child {
+    color: var(--muted, #8b93a7);
+}
+
+.quick-start-tip {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid rgba(59, 130, 246, .25);
+    border-radius: 12px;
+    background: rgba(59, 130, 246, .08);
+}
+
+.quick-start-tip .tip-icon {
+    flex-shrink: 0;
+    font-size: 17px;
+}
+
+.quick-start-tip strong {
+    display: block;
+    color: var(--text, #f4f4f5);
+    font-size: 12px;
+}
+
+.quick-start-tip p {
+    margin: 5px 0 0;
+    color: var(--muted, #8b93a7);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* Admin sees the admin sidebar; agents see Quick Start. */
+.assistant-admin-panel.hidden {
+    display: none !important;
+}
+
+.agent-quick-start.hidden {
+    display: none !important;
+}
+
+/* Keep the existing assistant column stable. */
+.assistant {
+    min-width: 0;
+    overflow: hidden;
+}
+</style>
 
 </head>
 
@@ -837,7 +1040,7 @@
 
 
                         <p>
-                            Ask about Salesforce, Non-SF, Telecom, or any document in your knowledge base.
+                            Ask about Salesforce, Non-SF, Telecom or any document in your knowledge base.
                         </p>
 
 
@@ -935,36 +1138,6 @@
 
 
 
-                <!-- =================================================
-                     LEGACY ANSWER CONTAINER
-                ================================================== -->
-
-                <div
-                    id="answerContainer"
-                    class="answer-container hidden"
-                    aria-hidden="true"
-                >
-
-
-                    <div class="answer-label">
-                        AI Assistant
-                    </div>
-
-
-                    <div id="answer"></div>
-
-
-                    <div
-                        id="sources"
-                        class="sources"
-                    ></div>
-
-
-                </div>
-
-
-            </div>
-
 
         </section>
 
@@ -980,7 +1153,9 @@
     <aside class="assistant">
 
 
-        <!-- ASSISTANT HEADER -->
+        <div class="assistant-admin-panel admin-only hidden">
+
+<!-- ASSISTANT HEADER -->
 
         <div class="assistant-header">
 
@@ -1198,7 +1373,9 @@
 
 
 
-        <!-- =================================================
+        </div>
+
+<!-- =================================================
              ASSISTANT TIP
         ================================================== -->
 
@@ -1255,6 +1432,161 @@
         ></textarea>
 
 
+
+        <!-- =================================================
+             AGENT QUICK START
+        ================================================== -->
+
+        <div class="agent-quick-start">
+
+            <div class="quick-start-header">
+
+                <div class="quick-start-icon">
+                    ✦
+                </div>
+
+                <div>
+                    <strong>Quick Start</strong>
+
+                    <p>
+                        Explore your knowledge base with common questions.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="quick-start-section">
+
+                <div class="quick-start-heading">
+                    By Category
+                </div>
+
+
+                <button
+                    type="button"
+                    class="quick-category"
+                    data-question="What Salesforce information is available in the knowledge base?"
+                >
+                    <span class="quick-category-icon salesforce">
+                        SF
+                    </span>
+
+                    <span class="quick-category-content">
+                        <strong>Salesforce</strong>
+                        <small>Ask about Salesforce documents</small>
+                    </span>
+
+                    <span class="quick-arrow">→</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="quick-category"
+                    data-question="What information is available in the Non-SF knowledge base?"
+                >
+                    <span class="quick-category-icon nonsf">
+                        NS
+                    </span>
+
+                    <span class="quick-category-content">
+                        <strong>Non-SF</strong>
+                        <small>Ask about other CRM documents</small>
+                    </span>
+
+                    <span class="quick-arrow">→</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="quick-category"
+                    data-question="What telecom information is available in the knowledge base?"
+                >
+                    <span class="quick-category-icon telecom">
+                        TC
+                    </span>
+
+                    <span class="quick-category-content">
+                        <strong>Telecom</strong>
+                        <small>Ask about telecom documents</small>
+                    </span>
+
+                    <span class="quick-arrow">→</span>
+                </button>
+
+            </div>
+
+
+            <div class="quick-start-section">
+
+                <div class="quick-start-heading">
+                    Popular Questions
+                </div>
+
+
+                <button
+                    type="button"
+                    class="quick-question"
+                    data-question="What documents are available?"
+                >
+                    <span>What documents are available?</span>
+                    <span>→</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="quick-question"
+                    data-question="What is Salesforce?"
+                >
+                    <span>What is Salesforce?</span>
+                    <span>→</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="quick-question"
+                    data-question="What is Zoho CRM?"
+                >
+                    <span>What is Zoho CRM?</span>
+                    <span>→</span>
+                </button>
+
+
+                <button
+                    type="button"
+                    class="quick-question"
+                    data-question="What is RAG?"
+                >
+                    <span>What is RAG?</span>
+                    <span>→</span>
+                </button>
+
+            </div>
+
+
+            <div class="quick-start-tip">
+
+                <span class="tip-icon">
+                    💡
+                </span>
+
+                <div>
+                    <strong>Tip</strong>
+
+                    <p>
+                        Ask specific questions for more accurate answers.
+                        Sources are included automatically.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
     </aside>
 
 
@@ -1267,6 +1599,116 @@
 ========================================================= -->
 
 <script src="/static/js/app.js"></script>
+<script>
+/* =========================================================
+   QUICK START ROLE VISIBILITY
+========================================================= */
+
+(function () {
+
+    function updateQuickStartVisibility() {
+
+        const role = (
+            localStorage.getItem("role") || "agent"
+        ).toLowerCase();
+
+        const adminPanel = document.querySelector(
+            ".assistant-admin-panel"
+        );
+
+        const agentPanel = document.querySelector(
+            ".agent-quick-start"
+        );
+
+        if (!adminPanel || !agentPanel) {
+            return;
+        }
+
+        if (role === "admin") {
+
+            adminPanel.classList.remove("hidden");
+            agentPanel.classList.add("hidden");
+
+        } else {
+
+            adminPanel.classList.add("hidden");
+            agentPanel.classList.remove("hidden");
+
+        }
+
+    }
+
+
+    function connectQuickQuestions() {
+
+        document
+            .querySelectorAll(
+                ".agent-quick-start [data-question]"
+            )
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const input =
+                            document.getElementById(
+                                "questionInput"
+                            );
+
+                        if (!input) {
+                            return;
+                        }
+
+                        input.value =
+                            this.dataset.question;
+
+                        input.focus();
+
+                        input.dispatchEvent(
+                            new Event(
+                                "input",
+                                { bubbles: true }
+                            )
+                        );
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    updateQuickStartVisibility();
+    connectQuickQuestions();
+
+    /*
+     * app.js sets the role during login. Re-check briefly so
+     * the sidebar switches immediately after login without
+     * requiring a page refresh.
+     */
+    let checks = 0;
+
+    const roleTimer = setInterval(
+        function () {
+
+            updateQuickStartVisibility();
+
+            checks++;
+
+            if (checks >= 20) {
+                clearInterval(roleTimer);
+            }
+
+        },
+        250
+    );
+
+})();
+</script>
+
+
 
 
 </body>

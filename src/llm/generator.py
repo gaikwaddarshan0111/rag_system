@@ -18,6 +18,14 @@ def generate_answer(
 
     if LLM_PROVIDER == "ollama":
 
+        import time
+
+        print(
+            f"LLM prompt characters: {len(prompt)}"
+        )
+        start = time.perf_counter()
+
+
         response = ollama.chat(
 
             model=OLLAMA_MODEL,
@@ -27,16 +35,62 @@ def generate_answer(
                     "role": "user",
                     "content": prompt
                 }
-            ]
+            ],
+            options = {
+                "temperature": 0.02,
+                "num_predict": 100
+            }
 
         )
 
-        return response[
-            "message"
-        ][
-            "content"
-        ]
+        elasped = (
+            time.perf_counter() - start
+        )
 
+        message = response["message"]["content"]
+
+        print(
+            f"LLM response characters:"
+            f"{len(message)}"
+        )
+
+        print(
+            f"LLM olam call time:"
+            f"{elasped:.2f}s"
+        )
+
+        # ollam provides useful generation statistics
+        if "prompt_eval_count" in response:
+
+            print(
+                f"Prompt tokens: "
+                f"{response['prompt_eval_count']}"
+            )
+
+        if "eval_count" in response:
+
+            print(
+                f"Generated tokens: "
+                f"{response['eval_count']}"
+            )
+
+        if "prompt_eval_duration" in response:
+
+            print(
+            f"Prompt evaluation: "
+            f"{response['prompt_eval_duration'] / 1_000_000_000:.2f}s"
+        )
+
+        if "eval_duration" in response:
+
+            print(
+            f"Generation: "
+            f"{response['eval_duration'] / 1_000_000_000:.2f}s"
+        )
+
+        return message
+
+        
 
     # =====================================================
     # DEPLOYMENT — OPENAI

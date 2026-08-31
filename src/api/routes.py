@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 import traceback
+import time
 
 from src.auth.dependencies import get_current_user
 from src.retrieval.retriever import retrieve_documents
@@ -45,6 +46,12 @@ def ask_question(
 
     try:
 
+        # =====================================================
+        # TOTAL TIMER
+        # =====================================================
+
+        total_start = time.perf_counter()
+
         print(
             "\n================ ASK REQUEST ================"
         )
@@ -66,12 +73,24 @@ def ask_question(
             "\n[1] Searching company knowledge base..."
         )
 
+        retrieval_start = time.perf_counter()
+
         results = retrieve_documents(
             question
         )
 
+        retrieval_time = (
+            time.perf_counter()
+            - retrieval_start
+        )
+
         print(
             f"Company KB results: {len(results)}"
+        )
+
+        print(
+            f"⏱ Retrieval time: "
+            f"{retrieval_time:.2f}s"
         )
 
 
@@ -104,7 +123,7 @@ def ask_question(
 
 
             # =================================================
-            # 3. CHECK IF COMPANY CONTEXT ANSWERS QUESTION
+            # 3. CHECK COMPANY ANSWERABILITY
             # =================================================
 
             print(
@@ -112,14 +131,28 @@ def ask_question(
                 "answerability..."
             )
 
+            answerability_start = (
+                time.perf_counter()
+            )
+
             answerable = check_answerability(
                 company_context,
                 question
             )
 
+            answerability_time = (
+                time.perf_counter()
+                - answerability_start
+            )
+
             print(
                 f"Company context answerable: "
                 f"{answerable}"
+            )
+
+            print(
+                f"⏱ Answerability time: "
+                f"{answerability_time:.2f}s"
             )
 
 
@@ -164,19 +197,38 @@ def ask_question(
             # 5. WEB SEARCH
             # =================================================
 
+            web_start = time.perf_counter()
+
             web_results = search_web(
                 question
             )
 
+            web_time = (
+                time.perf_counter()
+                - web_start
+            )
+
             print(
-                f"Web results: {len(web_results)}"
+                f"Web results: "
+                f"{len(web_results)}"
+            )
+
+            print(
+                f"⏱ Web search time: "
+                f"{web_time:.2f}s"
             )
 
 
             if not web_results:
 
+                total_time = (
+                    time.perf_counter()
+                    - total_start
+                )
+
                 print(
-                    "No web results found."
+                    f"⏱ TOTAL ASK TIME: "
+                    f"{total_time:.2f}s"
                 )
 
                 return AskResponse(
@@ -202,13 +254,27 @@ def ask_question(
                 "\n[4] Building web context..."
             )
 
+            web_context_start = (
+                time.perf_counter()
+            )
+
             context = build_web_context(
                 web_results
+            )
+
+            web_context_time = (
+                time.perf_counter()
+                - web_context_start
             )
 
             print(
                 f"Web context length: "
                 f"{len(context)} characters"
+            )
+
+            print(
+                f"⏱ Web context build time: "
+                f"{web_context_time:.2f}s"
             )
 
 
@@ -220,13 +286,26 @@ def ask_question(
             "\n[5] Building final prompt..."
         )
 
+        prompt_start = time.perf_counter()
+
         prompt = build_prompt(
             context,
             question
         )
 
+        prompt_time = (
+            time.perf_counter()
+            - prompt_start
+        )
+
         print(
-            f"Prompt length: {len(prompt)} characters"
+            f"Prompt length: "
+            f"{len(prompt)} characters"
+        )
+
+        print(
+            f"⏱ Prompt build time: "
+            f"{prompt_time:.2f}s"
         )
 
 
@@ -238,9 +317,22 @@ def ask_question(
             "\n[6] Calling LLM..."
         )
 
+        llm_start = time.perf_counter()
+
         answer = generate_answer(
             prompt
         )
+
+        llm_time = (
+            time.perf_counter()
+            - llm_start
+        )
+
+        print(
+            f"⏱ Final LLM time: "
+            f"{llm_time:.2f}s"
+        )
+
 
         print(
             "\n[7] LLM response:"
@@ -291,6 +383,21 @@ def ask_question(
 
         print(
             sources
+        )
+
+
+        # =====================================================
+        # TOTAL TIME
+        # =====================================================
+
+        total_time = (
+            time.perf_counter()
+            - total_start
+        )
+
+        print(
+            f"\n⏱ TOTAL ASK TIME: "
+            f"{total_time:.2f}s"
         )
 
 

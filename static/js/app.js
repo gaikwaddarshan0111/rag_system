@@ -3513,76 +3513,10 @@ async function handleAsk() {
         );
 
 
-        // ======================================
-        // LEGACY CONTAINER
-        // ======================================
-
-        if (answerContainer) {
-
-            answerContainer.classList.remove(
-                "hidden"
-            );
-
-        }
-
-
-        if (answerElement) {
-
-            answerElement.innerText =
-                answer;
-
-        }
-
-
-        if (sourcesElement) {
-
-            sourcesElement.innerHTML =
-                createSourcesHtml(
-                    normalizeSources(
-                        sources
-                    )
-                );
-
-        }
-
-
-    } catch (error) {
-
-        console.error(
-            "Ask error:",
-            error
-        );
-
-
-        removeLoadingMessage();
-
-
         addAssistantMessage(
-            error.message ||
-            "Sorry, I couldn't process your question. Please try again.",
-            []
-        );
-
-
-    } finally {
-
-        if (askButton) {
-
-            askButton.disabled =
-                false;
-
-        }
-
-
-        if (questionInput) {
-
-            questionInput.focus();
-
-        }
-
-    }
-
-}
+            answer,
+            sources
+        )
 
 
 // =========================================================
