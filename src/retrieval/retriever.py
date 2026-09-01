@@ -2,9 +2,8 @@ from src.embeddings.embedder import create_embeddings
 from src.vectordb.chroma_store import collection
 
 
-DEFAULT_TOP_K = 5
+DEFAULT_TOP_K = 10
 
-MAX_DISTANCE = 1.20
 
 def retrieve_documents(
         question: str,
@@ -16,36 +15,28 @@ def retrieve_documents(
     if not question:
         return[]
 
-    # Create embedding for the question
+    # =========================================
+    # CREATE QUESTION EMBEDDING
+    # ========================================
+    
     question_embedding = create_embeddings(
         [question]
     )[0]
 
-
-    # ===================================
-    # BUILD CHROMA QUERY
-    # ===================================
-
-    query_kwargs = {
-        "query_embeddings": [
-            question_embedding.tolist()
-        ],
-
-        "n_results": top_k
-    }
-
-
-    
-    # Search ChromaDB
+    # =========================================
+    # SEARCH CHROMADB
+    # =========================================
 
     results = collection.query(
-        **query_kwargs
-        
+         query_embeddings=[
+              question_embedding.tolist()
+         ],
+         n_results=top_k
     )
 
     documents = results.get(
-        "documents",
-        [[]]
+         "documents",
+         [[]]
     )[0]
 
     metadatas = results.get(
@@ -60,71 +51,42 @@ def retrieve_documents(
 
     retrieved = []
 
-    # ====================================
-    # PROCESS RESULTS
-    # ====================================
+    # ========================================
+    # RETURN ALL TOP-K RESULTS
+    # ========================================
+    for i , document in enumerate(documents):
 
-    for i, document in enumerate(documents):
-
-        metadata = (
-            metadatas[i]
-            if i < len(metadatas)
-            else {}
-        )
-
-        distance = (
+         metadata = (
+              metadatas[i]
+              if i < len(metadatas)
+              else {}
+         )
+         distance = (
             distances[i]
             if i < len(distances)
             else None
         )
 
-
-        # -----------------------------------
-        # RELEVANCE FILTER
-        # -----------------------------------
-
-        if distance is not None:
-
-            if distance > MAX_DISTANCE:
-
-                print(
-                    f"Skipping irrelevant result:"
-                    f"{metadata.get('source', 'Unknown')}"
-                    f"(distance={distance:.4f})"
-                )
-
-
-                continue
-
-
-        # -------------------------------------
-        # DUPLICATE PROTECTION
-        # -------------------------------------
-
-        source = metadata.get(
+         source = metadata.get(
             "source",
             "Unknown"
         )
 
-        chunk_index = metadata.get(
+         chunk_index = metadata.get(
             "chunk_index"
         )
 
-        duplicate = any(
-            item["metadata"].get("source") == source
-            and item["metadata"].get("chunk_index") == chunk_index
-            for item in retrieved
+         print(
+            f"Candidate: {source}"
+            f" | chunk={chunk_index}"
+            f" | distance={distance:.4f}"
+            if distance is not None
+            else
+            f"Candidate: {source}"
+            f" | chunk={chunk_index}"
         )
 
-        if duplicate:
-            continue
-
-
-        # -------------------------------------
-        # ADD RESULT
-        # -------------------------------------
-
-        retrieved.append(
+         retrieved.append(
             {
                 "document": document,
                 "metadata": metadata,
@@ -132,15 +94,14 @@ def retrieve_documents(
             }
         )
 
-
-    # =========================================
+    # =====================================================
     # LOGGING
-    # =========================================
+    # =====================================================
 
     print(
-        f"Retrieved {len(retrieved)} relevant documents"
-        f"(automatic category retrieval)"
+        f"Retrieved {len(retrieved)} documents"
+        f" from company knowledge base"
     )
 
-
     return retrieved
+

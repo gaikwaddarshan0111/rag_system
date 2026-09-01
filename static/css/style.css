@@ -3722,3 +3722,8 @@ button {
 
     transform: none;
 }
+
+/* Remove divider below AI Assistant header */
+.assistant-header {
+    border-bottom: none !important;
+}
